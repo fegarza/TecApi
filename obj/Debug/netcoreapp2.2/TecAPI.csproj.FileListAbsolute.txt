@@ -1,0 +1,14 @@
+C:\Users\fegar\source\repos\TecAPI\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.deps.json
+C:\Users\fegar\source\repos\TecAPI\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.runtimeconfig.json
+C:\Users\fegar\source\repos\TecAPI\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.runtimeconfig.dev.json
+C:\Users\fegar\source\repos\TecAPI\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.dll
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.csprojAssemblyReference.cache
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.csproj.CoreCompileInputs.cache
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.RazorAssemblyInfo.cache
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.RazorAssemblyInfo.cs
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.AssemblyInfoInputs.cache
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.AssemblyInfo.cs
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.RazorTargetAssemblyInfo.cache
+C:\Users\fegar\source\repos\TecAPI\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.pdb
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.dll
+C:\Users\fegar\source\repos\TecAPI\TecAPI\obj\Debug\netcoreapp2.2\TecAPI.pdb

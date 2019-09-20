@@ -14,7 +14,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/14/2019 18:18:13</publishTime>
     </File>
     <File Include="appsettings.json">
-      <publishTime>08/15/2019 13:50:14</publishTime>
+      <publishTime>09/14/2019 16:42:19</publishTime>
+    </File>
+    <File Include="appsettings.production.json">
+      <publishTime>09/14/2019 16:43:57</publishTime>
     </File>
     <File Include="dotnet-aspnet-codegenerator-design.dll">
       <publishTime>03/02/2019 19:52:30</publishTime>
@@ -110,27 +113,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>08/14/2019 18:14:58</publishTime>
     </File>
     <File Include="TecAPI.deps.json">
-      <publishTime>09/14/2019 15:33:27</publishTime>
+      <publishTime>09/15/2019 18:34:58</publishTime>
     </File>
     <File Include="TecAPI.dll">
-      <publishTime>09/14/2019 15:33:25</publishTime>
+      <publishTime>09/15/2019 18:34:56</publishTime>
     </File>
     <File Include="TecAPI.pdb">
-      <publishTime>09/14/2019 15:33:25</publishTime>
+      <publishTime>09/15/2019 18:34:56</publishTime>
     </File>
     <File Include="TecAPI.runtimeconfig.json">
-      <publishTime>09/14/2019 15:33:27</publishTime>
+      <publishTime>09/15/2019 18:34:58</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>09/14/2019 15:33:28</publishTime>
+      <publishTime>09/15/2019 18:34:58</publishTime>
     </File>
-  </ItemGroup>
-  <ItemGroup>
-    <EFMigrations Include="TecAPI.Models.Escolares.EscolaresContext">
-      <Value>Server=localhost%3bDatabase=ESCOLARES%3bUser Id=pipe%3bPassword=7271%3b</Value>
-    </EFMigrations>
-    <EFMigrations Include="TecAPI.Models.Tutorias.TUTORIASContext">
-      <Value>Server=localhost%3bDatabase=TUTORIAS%3bUser Id=pipe%3bPassword=7271%3b</Value>
-    </EFMigrations>
   </ItemGroup>
 </Project>

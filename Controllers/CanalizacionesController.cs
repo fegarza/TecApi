@@ -61,5 +61,65 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
+        [AllowAnonymous]
+        [HttpGet]
+        public Respuesta MostrarTodos()
+        {
+            Respuesta miRespuesta = new Respuesta();
+            try
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+
+                    var result = db.Canalizaciones.Select(s => new
+                    {
+                        descripcion = s.Descripcion,
+                        estudiante = new
+                        {
+                            id = s.Estudiante.Id,
+                            numeroDeControl = s.Estudiante.NumeroDeControl,
+                            usuario = new
+                            {
+                                id = s.Estudiante.Usuario.Id,
+                                nombreCompleto = s.Estudiante.Usuario.NombreCompleto
+                            }
+                        },
+                        personal = new
+                        {
+                            id = s.Personal.Id,
+                            usuario = new
+                            {
+                                id = s.Personal.Usuario.Id,
+                                nombreCompleto = s.Personal.Usuario.NombreCompleto
+                            }
+                        },
+                        Atencion = new
+                        {
+                            id = s.Atencion.AreaId,
+                            titulo = s.Atencion.Titulo
+                        }
+                    }).ToList();
+                    if (result.Count > 0)
+                    {
+                        miRespuesta.data = result;
+                        miRespuesta.code = StatusCodes.Status200OK;
+                        miRespuesta.mensaje = "exito";
+                    }
+                    else
+                    {
+                        miRespuesta.code = StatusCodes.Status500InternalServerError;
+                        miRespuesta.mensaje = "No hay canalizaciones registradas";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                miRespuesta.code = StatusCodes.Status500InternalServerError;
+                miRespuesta.mensaje = "error interno";
+            }
+
+            return miRespuesta;
+        }
+
     }
 }

@@ -35,8 +35,9 @@ namespace TecAPI.Controllers
                            .Include(p => p.Usuario)
                            .Include(p => p.Canalizaciones)
                            .Where(w => w.Id == int.Parse(id))
-                           .Select(s => new {
-                               id= s.Id,
+                           .Select(s => new
+                           {
+                               id = s.Id,
                                usuario = new
                                {
                                    nombreCompleto = s.Usuario.NombreCompleto,
@@ -47,7 +48,11 @@ namespace TecAPI.Controllers
                                    email = s.Usuario.Email
                                },
                                cargo = s.Cargo,
-                               departamento = s.Departamento.Titulo,
+                               departamento = new
+                               {
+                                   id = s.DepartamentoId,
+                                   titulo = s.Departamento.Titulo
+                               },
                                tutorados = s.Grupos.Estudiantes.Count(),
                                canalizaciones = s.Canalizaciones.Count(),
                                posts = s.Posts.Count(),
@@ -99,7 +104,7 @@ namespace TecAPI.Controllers
                 try
                 {
 
-                   
+
 
                     if (cant != null & pag != null)
                     {
@@ -111,7 +116,8 @@ namespace TecAPI.Controllers
                            .Include(p => p.Grupos)
                            .Include(p => p.Usuario)
                            .Include(p => p.Canalizaciones)
-                           .Select(s => new {
+                           .Select(s => new
+                           {
                                id = s.Id,
                                usuario = new
                                {
@@ -123,14 +129,18 @@ namespace TecAPI.Controllers
                                    email = s.Usuario.Email
                                },
                                cargo = s.Cargo,
-                               departamento = s.Departamento.Titulo,
+                               departamento = new
+                               {
+                                   id = s.DepartamentoId,
+                                   titulo = s.Departamento.Titulo
+                               },
                                tutorados = s.Grupos.Estudiantes.Count(),
                                canalizaciones = s.Canalizaciones.Count(),
                                posts = s.Posts.Count(),
                                grupoId = s.Grupos.Id.ToString()
                            }).Skip((cantidad * pagina) - cantidad).Take(cantidad).ToList();
 
-                        
+
                             if (result.Count() > 0)
                             {
                                 miRespuesta.code = StatusCodes.Status200OK;
@@ -157,7 +167,8 @@ namespace TecAPI.Controllers
                            .Include(p => p.Grupos)
                            .Include(p => p.Usuario)
                            .Include(p => p.Canalizaciones)
-                           .Select(s => new {
+                           .Select(s => new
+                           {
                                id = s.Id,
                                usuario = new
                                {
@@ -169,7 +180,11 @@ namespace TecAPI.Controllers
                                    email = s.Usuario.Email
                                },
                                cargo = s.Cargo,
-                               departamento = s.Departamento.Titulo,
+                               departamento = new
+                               {
+                                   id = s.DepartamentoId,
+                                   titulo = s.Departamento.Titulo
+                               },
                                tutorados = s.Grupos.Estudiantes.Count(),
                                canalizaciones = s.Canalizaciones.Count(),
                                posts = s.Posts.Count(),
@@ -222,7 +237,7 @@ namespace TecAPI.Controllers
                 {
                     miRespuesta.code = StatusCodes.Status200OK;
 
-                    miRespuesta.data  = TECDB.MostrarPersonales();
+                    miRespuesta.data = TECDB.MostrarPersonales();
                     miRespuesta.mensaje = "exito";
 
                 }
@@ -269,13 +284,13 @@ namespace TecAPI.Controllers
                 try
                 {
 
-                       TecAPI.Models.Tutorias.Usuarios miUsuario = TECDB.TraerDatosPersonal(personal.Cve);
-                       miUsuario.Email = personal.Usuario.Email;
-                       miUsuario.Clave = personal.Usuario.Clave;
-                       miUsuario.Tipo = "P";
-                       personal.Usuario = miUsuario;
-                       personal.Grupos = new Grupos() { };
-                     using (TUTORIASContext db = new TUTORIASContext())
+                    TecAPI.Models.Tutorias.Usuarios miUsuario = TECDB.TraerDatosPersonal(personal.Cve);
+                    miUsuario.Email = personal.Usuario.Email;
+                    miUsuario.Clave = personal.Usuario.Clave;
+                    miUsuario.Tipo = "P";
+                    personal.Usuario = miUsuario;
+                    personal.Grupos = new Grupos() { };
+                    using (TUTORIASContext db = new TUTORIASContext())
                     {
                         try
                         {
@@ -283,7 +298,7 @@ namespace TecAPI.Controllers
                             db.SaveChanges();
                             miRespuesta.mensaje = "Se ha insertado correctamente";
                             miRespuesta.code = 200;
-                            miRespuesta.data = mostrarPersonal( db.Personales.Where(w=> w.Cve == personal.Cve).First().Id.ToString()  ).data;
+                            miRespuesta.data = mostrarPersonal(db.Personales.Where(w => w.Cve == personal.Cve).First().Id.ToString()).data;
                         }
                         catch (Exception ex)
                         {
@@ -304,12 +319,119 @@ namespace TecAPI.Controllers
 
             return miRespuesta;
 
- 
+
         }
 
-        private object mostrarAlumno(string numeroDeControl)
+
+        [AllowAnonymous]
+        [HttpPut]
+        public Respuesta modificar([FromBody] Personales personal)
         {
-            throw new NotImplementedException();
+
+            Respuesta miRespuesta = new Respuesta();
+
+            if (personal != null)
+            {
+                if (!String.IsNullOrEmpty(personal.Id.ToString()))
+                {
+                    try
+                    {
+                        using (TUTORIASContext db = new TUTORIASContext())
+                        {
+
+                            var result = db.Personales.Where(r => r.Id == personal.Id);
+                            if (result.Count() > 0)
+                            {
+                                try
+                                {
+                                    List<string> acciones = new List<string>();
+                                    List<string> errores = new List<string>();
+                                    //Modificar el titulo
+                                    if (personal.TituloId != 0)
+                                    {
+                                        if (db.Titulos.Where(r => r.Id == personal.TituloId).Count() > 0)
+                                        {
+                                            result.First().TituloId = personal.TituloId;
+                                            acciones.Add("se ha cambiado el titulo con exito");
+
+                                        }
+                                        else
+                                        {
+                                            errores.Add("no existe ningun titulo con el id dado");
+                                        }
+                                    }
+                                    //Modificar cargo
+                                    if (personal.Cargo != null)
+                                    {
+                                        if (personal.Cargo.ToLower() == "d" || personal.Cargo.ToLower() == "j" || personal.Cargo.ToLower() == "t" || personal.Cargo.ToLower() == "c")
+                                        {
+                                            result.First().Cargo = personal.Cargo;
+                                            acciones.Add("se ha cambiado el cargo con exito");
+                                        }
+                                        else
+                                        {
+                                            errores.Add("no existe el cargo dado");
+
+                                        }
+                                    }
+
+                                    if (personal.DepartamentoId != 0)
+                                    {
+                                        if (db.Departamentos.Where(r => r.Id == personal.DepartamentoId).Count() > 0)
+                                        {
+                                            result.First().DepartamentoId = personal.DepartamentoId;
+                                            acciones.Add("se ha cambiado el departamento con exito");
+
+                                        }
+                                        else
+                                        {
+                                            errores.Add("no existe ningun departamento con el id dado");
+                                        }
+                                    }
+
+                                    db.SaveChanges();
+                                    miRespuesta.mensaje = "exito";
+                                    miRespuesta.data = new { acciones, errores };
+                                    miRespuesta.code = StatusCodes.Status200OK;
+                                }
+                                catch
+                                {
+                                    miRespuesta.mensaje = "error al establecer datos al estudiante";
+                                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                                }
+                            }
+                            else
+                            {
+                                miRespuesta.mensaje = "no existe un estudiante con ese numero de control";
+                                miRespuesta.code = 500;
+
+                            }
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        miRespuesta.mensaje = "error en el sistema";
+                        miRespuesta.code = 500;
+                    }
+                }
+                else
+                {
+                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                    miRespuesta.mensaje = "no se ha dado el numero de control";
+                }
+            }
+            else
+            {
+                miRespuesta.code = StatusCodes.Status400BadRequest;
+                miRespuesta.mensaje = "los datos no son enviados no son correctos";
+            }
+
+
+
+            return miRespuesta;
+
         }
+
     }
 }

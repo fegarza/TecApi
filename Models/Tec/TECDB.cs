@@ -12,10 +12,10 @@ namespace TecAPI.Models.Tec
 {
     public static class TECDB
     {
-        public static string host = "192.168.1.78,1433";
+        public static string host = "localhost";
         public static string dataBase = "TEC";
-        public static string userName = "pipe";
-        public static string password = "72719902";
+        public static string userName = "sa";
+        public static string password = "7271";
 
         public static bool ExisteNumeroDeControl(string _numeroDeControl)
         {

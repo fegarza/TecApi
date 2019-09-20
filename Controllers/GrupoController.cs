@@ -121,10 +121,10 @@ namespace TecAPI.Controllers
                                     titulo = s.AccionTutorial.Titulo,
                                     contenido = s.AccionTutorial.Contenido
                                 },
-                                Asistencias = s.EstudiantesSesiones.Select(d=> new{ estudianteId = d.EstudianteId})
+                                Asistencias = s.EstudiantesSesiones.Select(d => new { estudianteId = d.EstudianteId })
                             }
                             );
-                             
+
                         if (result.Count() > 0)
                         {
                             miRespuesta.code = StatusCodes.Status200OK;
@@ -172,19 +172,21 @@ namespace TecAPI.Controllers
                         {
                             asistencias = s.Estudiantes.Select(d => new
                             {
+                                id = d.Id,
+                                grupoId = d.GrupoId,
                                 nombreCompleto = d.Usuario.NombreCompleto,
                                 nombre = d.Usuario.Nombre,
                                 apellidoMaterno = d.Usuario.ApellidoMaterno,
                                 apellidoPaterno = d.Usuario.ApellidoPaterno,
                                 numeroDeControl = d.NumeroDeControl,
-                                presente =  d.EstudiantesSesiones.Where( w=> w.EstudianteId == d.Id && w.SesionId == int.Parse(sesionId)).Count() > 0 ? 1 : 0
+                                presente = d.EstudiantesSesiones.Where(w => w.EstudianteId == d.Id && w.SesionId == int.Parse(sesionId)).Count() > 0 ? 1 : 0
                             })
-                        }); 
-                      
+                        });
+
                         if (result.Count() > 0)
                         {
                             miRespuesta.code = StatusCodes.Status200OK;
-                            miRespuesta.data = result.ToList();
+                            miRespuesta.data = result.First().asistencias;
                         }
                         else
                         {
@@ -210,6 +212,83 @@ namespace TecAPI.Controllers
 
             return miRespuesta;
         }
+
+
+        [Route("{id}/Sesiones/{sesionId}")]
+        [AllowAnonymous]
+        [HttpPost]
+        public Respuesta InsertarAsistencias(string id, string sesionId, [FromBody] List<Estudiantes> estudiantes)
+        {
+            Respuesta miRespuesta = new Respuesta();
+
+            if (id != null && sesionId != null )
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    var grupo = db.Grupos.Where(w => w.Id == int.Parse(id)).Select(s=> new { departamentoId = s.Personal.DepartamentoId });
+                    
+                    if(grupo.Count() > 0)
+                    {
+                        //Existe el grupo
+                        if (db.Sesiones.Where(w => w.Id == int.Parse(sesionId) && w.DepartamentoId == grupo.First().departamentoId).Count() > 0)
+                        {
+                            //Quitar todas las asistencias 
+                            db.EstudiantesSesiones.RemoveRange(db.EstudiantesSesiones.Where(w => w.SesionId == int.Parse(sesionId) && w.GrupoId ==  int.Parse(id)));
+                            db.SaveChanges();
+                            //Empezar la toma de asistencias
+                            List<string> errores = new List<string>();
+                            foreach (Estudiantes e in estudiantes)
+                            {
+                                try
+                                {
+                                    //Estudiante existe y pertenece al grupo
+                                    if (e.GrupoId == int.Parse(id) && db.Estudiantes.Where(w => w.Id == e.Id).Count() > 0)
+                                    {
+                                            //Colocar asistencia
+                                            db.EstudiantesSesiones.Add(new EstudiantesSesiones() { EstudianteId = e.Id, GrupoId = int.Parse(id), SesionId = int.Parse(sesionId) });
+                                            db.SaveChanges();
+                                    }
+                                }
+                                catch
+                                {
+                                    errores.Add("Error con el estudiante con ID: " + e.Id);
+                                }
+                            }
+                            miRespuesta.code = StatusCodes.Status200OK;
+                            miRespuesta.data = errores;
+                            if(errores.Count() > 0)
+                            {
+                                miRespuesta.mensaje = "se ejecuto pero con errores";
+                            }
+                            else
+                            {
+                                miRespuesta.mensaje = "exito";
+                            }
+
+                        }
+                        else
+                        {
+                            //No la combinacion de sesion y grupo
+                            miRespuesta.code = StatusCodes.Status409Conflict;
+                            miRespuesta.mensaje = "el grupo no tiene esa sesion";
+                        }
+                    }
+                    else
+                    {
+                        //No existe el grupo
+                        miRespuesta.code = StatusCodes.Status409Conflict;
+                        miRespuesta.mensaje = "el grupo dado no existe";
+                    }
+                }
+            }
+            else
+            {
+                miRespuesta.code = StatusCodes.Status409Conflict;
+                miRespuesta.mensaje = "no se ha dado el id";
+            }
+            return miRespuesta;
+        }
+
 
         [AllowAnonymous]
         [HttpGet]
@@ -318,6 +397,7 @@ namespace TecAPI.Controllers
                 {
                     miRespuesta.code = StatusCodes.Status500InternalServerError;
                     miRespuesta.mensaje = "error interno";
+                    miRespuesta.data = ex;
                 }
 
             }

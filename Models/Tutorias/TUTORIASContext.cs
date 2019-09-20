@@ -37,7 +37,7 @@ namespace TecAPI.Models.Tutorias
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server= 192.168.1.78,1433; Database = TUTORIAS; User ID=pipe;Password=72719902;Trusted_Connection=False");
+                optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; User ID=sa;Password=7271;Trusted_Connection=False");
             }
         }
 

@@ -55,6 +55,7 @@ namespace TecAPI.Controllers
                         .Include(i => i.Usuario)
                         .Select(s => new
                         {
+                            id = s.Id,
                             usuario = new
                             {
                                 nombre = s.Usuario.Nombre,
@@ -162,6 +163,7 @@ namespace TecAPI.Controllers
                         .Include(i => i.Usuario)
                         .Select(s => new
                         {
+                            id = s.Id,
                             usuario = new
                             {
                                 nombre = s.Usuario.Nombre,

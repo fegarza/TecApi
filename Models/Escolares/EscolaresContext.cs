@@ -1,6 +1,14 @@
-﻿using System;
+﻿#define PROD
+#undef PROD
+#define LOCAL
+#undef LOCAL
+
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+
+
+
 
 namespace TecAPI.Models.Escolares
 {
@@ -30,9 +38,17 @@ namespace TecAPI.Models.Escolares
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=sa;Password=7271;Trusted_Connection=False");
+#if PROD
+                 optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = Escolares; User ID=Complementarias;Password=Proyecto.2kl8;Trusted_Connection=False");
+#else
 
-             }
+#if LOCAL
+                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=sa;Password=7271;Trusted_Connection=False");
+#else
+                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=pipe;Password=7271;Trusted_Connection=False");
+#endif
+#endif
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -16,6 +16,7 @@ namespace TecAPI.Models.Tutorias
         public int PersonalId { get; set; }
         public DateTime Fecha { get; set; }
         public bool Obligatorio { get; set; }
+        public bool? Activo { get; set; }
 
         public virtual Personales Personal { get; set; }
         public virtual ICollection<Sesiones> Sesiones { get; set; }

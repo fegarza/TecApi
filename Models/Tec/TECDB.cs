@@ -1,4 +1,7 @@
-﻿#define mantenimiento
+﻿#define PROD
+#undef PROD
+#define LOCAL
+#undef LOCAL
 
 using System;
 using System.Collections.Generic;
@@ -12,11 +15,27 @@ namespace TecAPI.Models.Tec
 {
     public static class TECDB
     {
+#if PROD
+        public static string host = "10.10.10.10";
+        public static string dataBase = "TEC";
+        public static string userName = "tutorias";
+        public static string password = "Tut0r14s.2014";
+
+#else
+#if LOCAL
         public static string host = "localhost";
         public static string dataBase = "TEC";
         public static string userName = "sa";
         public static string password = "7271";
+#else
+        public static string host = "localhost";
+        public static string dataBase = "TEC";
+        public static string userName = "pipe";
+        public static string password = "7271";
+#endif
 
+
+#endif
         public static bool ExisteNumeroDeControl(string _numeroDeControl)
         {
             bool resp = false;
@@ -42,7 +61,28 @@ namespace TecAPI.Models.Tec
             return resp;
 
         }
+        public static object ComprobarConexion()
+        {
+            Exception xd = null;
+            try
+            {
+                SqlConnection connection = new SqlConnection($"Data Source={host};Initial Catalog={dataBase};User ID={userName};Password={password}");
+                connection.Open();
+                SqlCommand command = new SqlCommand($"SELECT carcve FROM dcalum WHERE aluctr = '17100218' ", connection);
+                SqlDataReader dr = command.ExecuteReader();
 
+                while (dr.Read())
+                {
+                    
+                }
+                connection.Close();
+            }
+            catch (Exception e)
+            {
+                xd = e;
+            }
+            return xd;
+        }
         public static bool ExisteClave(string _clave)
         {
             bool resp = false;
@@ -219,7 +259,8 @@ namespace TecAPI.Models.Tec
             return resp;
         }
 
-        public static List<Personales> MostrarPersonales() {
+        public static List<Personales> MostrarPersonales()
+        {
 
             List<Personales> PersonalLista = new List<Personales>();
             SqlConnection connection = new SqlConnection($"Data Source={host};Initial Catalog={dataBase};User ID={userName};Password={password}");
@@ -230,8 +271,9 @@ namespace TecAPI.Models.Tec
             while (dr.Read())
             {
                 bool existe = false;
-                using(TUTORIASContext db = new TUTORIASContext()){
-                    if(db.Personales.Where(w=> w.Cve == dr["PERCVE"].ToString()).Count() > 0)
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    if (db.Personales.Where(w => w.Cve == dr["PERCVE"].ToString()).Count() > 0)
                     {
                         existe = true;
                     }
@@ -256,7 +298,7 @@ namespace TecAPI.Models.Tec
 
             connection.Close();
 
-             return PersonalLista;
+            return PersonalLista;
         }
     }
 }

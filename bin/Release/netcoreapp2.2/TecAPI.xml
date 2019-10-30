@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TecAPI</name>
+    </assembly>
+    <members>
+        <member name="M:TecAPI.Controllers.ValuesController.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.ValuesController.Get">
+            <summary>
+            Esto solo es una prueba
+            </summary>
+            <returns>retorna una prueba </returns>
+        </member>
+    </members>
+</doc>

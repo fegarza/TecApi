@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\fegar\\source\\repos\\TecAPI\\TecAPI\\TecAPI.csproj": {}
+    "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\fegar\\source\\repos\\TecAPI\\TecAPI\\TecAPI.csproj": {
+    "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fegar\\source\\repos\\TecAPI\\TecAPI\\TecAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj",
         "projectName": "TecAPI",
-        "projectPath": "C:\\Users\\fegar\\source\\repos\\TecAPI\\TecAPI\\TecAPI.csproj",
-        "packagesPath": "C:\\Users\\fegar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fegar\\source\\repos\\TecAPI\\TecAPI\\obj\\",
+        "projectPath": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj",
+        "packagesPath": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\fegar\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -70,19 +70,23 @@
               "target": "Package",
               "version": "[2.2.0, )"
             },
+            "Microsoft.Extensions.PlatformAbstractions": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
             "Microsoft.NETCore.App": {
               "suppressParent": "All",
               "target": "Package",
               "version": "[2.2.0, )",
               "autoReferenced": true
             },
-            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
-              "target": "Package",
-              "version": "[1.7.9, )"
-            },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[2.2.3, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[5.0.0-rc2, )"
             },
             "System.Console": {
               "target": "Package",
@@ -90,10 +94,16 @@
             }
           },
           "imports": [
-            "net461"
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
           ],
           "assetTargetFallback": true,
-          "warn": true
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

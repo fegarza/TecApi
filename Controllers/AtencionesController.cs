@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +8,24 @@ using TecAPI.Models.Tutorias;
 
 namespace TecAPI.Controllers
 {
-
+    /// <summary>
+    /// Todo lo relacionado con las atenciones
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "A, C, J, D, T")]
     public class AtencionesController : ControllerBase
     {
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Mostrar las atenciones
+        /// </summary>
+        /// <param name="cant">cantidad de registros a traer</param>
+        /// <param name="pag">pagina en la que se quiere estar</param>
+        /// <param name="orderBy">orden a implementar</param>
+        /// <returns>un modelo de respuesta</returns>
         [HttpGet]
-        public Respuesta MostrarTodos()
+        public Respuesta Index(int cant, int pag, string orderBy)
         {
             Respuesta miRespuesta = new Respuesta();
             try
@@ -32,18 +39,28 @@ namespace TecAPI.Controllers
                              id = s.Id,
                              areaId = s.AreaId,
                              titulo = s.Titulo
-                         })
-                         .ToList();
-                    if (result.Count > 0)
+                         });
+                    if (!String.IsNullOrEmpty(orderBy))
                     {
-                        miRespuesta.data = result;
-                        miRespuesta.code = StatusCodes.Status200OK;
+                        result = result.OrderBy(orderBy);
+                    }
+                    if (cant != 0 & pag != 0)
+                    {
+                        int x = ((cant * pag) - cant);
+                        result = result.Skip((cant * pag) - cant).Take(cant);
+                    }
+
+                    if (result.Count() > 0)
+                    {
                         miRespuesta.mensaje = "exito";
+                        miRespuesta.code = StatusCodes.Status200OK;
+                        miRespuesta.data = result.ToList();
                     }
                     else
                     {
-                        miRespuesta.code = StatusCodes.Status500InternalServerError;
-                        miRespuesta.mensaje = "No hay atenciones registrados";
+                        miRespuesta.mensaje = "no hay registros";
+                        miRespuesta.code = StatusCodes.Status404NotFound;
+                        miRespuesta.data = null;
                     }
                 }
             }

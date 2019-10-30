@@ -11,19 +11,93 @@ using TecAPI.Models.Tutorias;
 
 namespace TecAPI.Controllers
 {
+    /// <summary>
+    /// Todo lo relacionado a las sesiones
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "A, C, J, D, T")]
+
     public class SesionesController : ControllerBase
     {
-
-        [HttpPost]
-        public Respuesta Insertar(Sesiones sesion)
+        /// <summary>
+        /// Mostrar todas las sesiones
+        /// </summary>
+        /// <param name="cant">cantidad de registros a traer</param>
+        /// <param name="pag">pagina en la que se quiere estar</param>
+        /// <param name="orderBy">orden a implementar</param>
+        /// <returns>un modelo de respuesta</returns>
+        [HttpGet]
+        public Respuesta Index(int cant, int pag, string orderBy)
         {
             Respuesta miRespuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+                    var result = db.Sesiones
+                      .Select(s =>
+                           new
+                           {
+                               id = s.Id,
+                               departamentoId = s.DepartamentoId,
+                               fecha = s.Fecha
+                           }
+                    );
 
+                    if (!String.IsNullOrEmpty(orderBy))
+                    {
+                        result = result.OrderBy(orderBy);
+                    }
+                    if (cant != 0 & pag != 0)
+                    {
+                        int x = ((cant * pag) - cant);
+                        result = result.Skip((cant * pag) - cant).Take(cant);
+                    }
+
+                    if (result.Count() > 0)
+                    {
+                        miRespuesta.mensaje = "exito";
+                        miRespuesta.code = StatusCodes.Status200OK;
+                        miRespuesta.data = result.ToList();
+                    }
+                    else
+                    {
+                        miRespuesta.mensaje = "no hay registros";
+                        miRespuesta.code = StatusCodes.Status404NotFound;
+                        miRespuesta.data = null;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    miRespuesta.code = StatusCodes.Status500InternalServerError;
+                    miRespuesta.mensaje = "error interno";
+                    miRespuesta.data = ex;
+                }
+
+            }
+
+
+
+            return miRespuesta;
+        }
+
+
+        /// <summary>
+        /// Insertar una sesion
+        /// </summary>
+        /// <param name="sesion">El objeto sesion en formato JSON</param>
+        /// <returns>Un modelo de respuesta</returns>
+        [HttpPost]
+        public Respuesta Store([FromBody]Sesiones sesion)
+        {
+            Respuesta miRespuesta = new Respuesta();
+           
             if (!ModelState.IsValid)
             {
                 List<string> errores = new List<string>();
+               
                 foreach (Microsoft.AspNetCore.Mvc.ModelBinding.ModelError e in ModelState.Values.SelectMany(modelState => modelState.Errors).ToList())
                 {
                     errores.Add(e.ErrorMessage);
@@ -32,6 +106,11 @@ namespace TecAPI.Controllers
 
                 miRespuesta.mensaje = "datos invalidos";
                 miRespuesta.code = StatusCodes.Status400BadRequest;
+
+
+                
+
+
             }
             else
             {
@@ -40,13 +119,13 @@ namespace TecAPI.Controllers
                     using (TUTORIASContext db = new TUTORIASContext())
                     {
 
-                        var sesionesDelDepartamento = db.Sesiones.Include(i=> i.AccionTutorial).Where(s => s.DepartamentoId == sesion.DepartamentoId).Select(s => s.AccionTutorialId).ToArray();
+                        var sesionesDelDepartamento = db.Sesiones.Include(i => i.AccionTutorial).Where(s => s.DepartamentoId == sesion.DepartamentoId).Select(s => s.AccionTutorialId).ToArray();
                         var accionesTutorialesSinTomar = db.AccionesTutoriales.Where(w => !sesionesDelDepartamento.Contains(w.Id));
-                        if(accionesTutorialesSinTomar.Count() > 0)
+                        if (accionesTutorialesSinTomar.Count() > 0)
                         {
                             var accionPendiente = accionesTutorialesSinTomar.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
 
-                            if(accionPendiente.Count() > 0)
+                            if (accionPendiente.Count() > 0)
                             {
                                 var AccionSeleccionada = db.AccionesTutoriales.Where(w => w.Id == sesion.AccionTutorialId).First();
                                 if (AccionSeleccionada.Fecha <= accionPendiente.First().Fecha)
@@ -75,7 +154,7 @@ namespace TecAPI.Controllers
                             }
 
 
-                           
+
 
                         }
                         else//no tiene acciones tutoriales sin tomar
@@ -85,13 +164,13 @@ namespace TecAPI.Controllers
                             miRespuesta.data = null;
                         }
 
-                   
 
 
-                        
+
+
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     miRespuesta.mensaje = "error";
                     miRespuesta.code = StatusCodes.Status500InternalServerError;
@@ -102,86 +181,6 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
-        public Respuesta MostrarTodos(string cant, string pag)
-        {
-            Respuesta miRespuesta = new Respuesta();
-            using (TUTORIASContext db = new TUTORIASContext())
-            {
-                try
-                {
-                    var result = db.Sesiones
-                      .Select(s =>
-                           new
-                           {
-                               id = s.Id,
-                               departamentoId = s.DepartamentoId,
-                               fecha = s.Fecha
-                           }
-                    );
-                    if (cant != null & pag != null)
-                    {
-                        try
-                        {
-                            int cantidad = int.Parse(cant);
-                            int pagina = int.Parse(pag);
-                            var resut2 = result.Skip((cantidad * pagina) - cantidad).Take(cantidad).ToList();
-                            if (resut2.Count() > 0)
-                            {
-                                miRespuesta.code = StatusCodes.Status200OK;
-                                miRespuesta.mensaje = "exito";
-                                miRespuesta.data = resut2;
-                            }
-                            else
-                            {
-                                miRespuesta.code = StatusCodes.Status404NotFound;
-                                miRespuesta.mensaje = "no hay registros";
-                                miRespuesta.data = resut2;
-                            }
 
-                        }
-                        catch
-                        {
-                            miRespuesta.code = StatusCodes.Status400BadRequest;
-                            miRespuesta.mensaje = "error con el numero de pag y numero de cantidad";
-                        }
-                    }
-                    else
-                    {
-                        if (result.Count() > 0)
-                        {
-                            miRespuesta.code = 200;
-                            miRespuesta.data = result.ToList();
-                            miRespuesta.mensaje = "exito";
-                        }
-                        else
-                        {
-                            miRespuesta.code = StatusCodes.Status404NotFound;
-                            miRespuesta.data = result.ToList();
-                            miRespuesta.mensaje = "no hay registros";
-                        }
-
-                    }
-                    //
-
-
-
-
-
-
-                }
-                catch (Exception ex)
-                {
-                    miRespuesta.code = StatusCodes.Status500InternalServerError;
-                    miRespuesta.mensaje = "error interno";
-                }
-
-            }
-
-
-
-            return miRespuesta;
-        }
     }
 }

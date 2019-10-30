@@ -10,11 +10,19 @@ using TecAPI.Models.Tutorias;
 
 namespace TecAPI.Controllers
 {
+
+    /// <summary>
+    /// Todo lo relacionado a los titulos
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "A, C, J, D, T")]
     public class TitulosController : ControllerBase
     {
-
+        /// <summary>
+        /// Mostrar todos los titulos disponibles
+        /// </summary>
+        /// <returns>Un modelo de respusta</returns>
         [AllowAnonymous]
         [HttpGet]
         public Respuesta MostrarTodos()

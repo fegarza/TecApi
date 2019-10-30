@@ -13,15 +13,23 @@ using TecAPI.Response;
 
 namespace TecAPI.Controllers
 {
+    /// <summary>
+    /// Todo lo relacionado a los personales
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "A, C, J, D, T")]
     public class PersonalesController : ControllerBase
     {
 
+        /// <summary>
+        /// Mostrar un personal en especifico
+        /// </summary>
+        /// <param name="id">Identificador del personal</param>
+        /// <returns>Un modelo de respuesta</returns>
         [Route("{id}")]
-        [AllowAnonymous]
         [HttpGet]
-        public Respuesta mostrarPersonal(string id)
+        public Respuesta Show(string id)
         {
             Respuesta miRespuesta = new Respuesta();
             if (id != null)
@@ -40,6 +48,7 @@ namespace TecAPI.Controllers
                                id = s.Id,
                                usuario = new
                                {
+                                   id= s.Usuario.Id,
                                    nombreCompleto = s.Usuario.NombreCompleto,
                                    nombre = s.Usuario.Nombre,
                                    apellidoMaterno = s.Usuario.ApellidoMaterno,
@@ -89,124 +98,128 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
-        [AllowAnonymous]
+        /// <summary>
+        /// Mostrar un personal en especifico
+        /// </summary>
+        /// <param name="id">Identificador del personal</param>
+        /// <returns>Un modelo de respuesta</returns>
+        [Route("{id}/grupo")]
         [HttpGet]
-        public Respuesta mostrarTodos(string cant, string pag)
+        public Respuesta ShowGrupo(string id)
         {
             Respuesta miRespuesta = new Respuesta();
+            if (id != null)
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    try
+                    {
+                        var result = db.Personales
+                           .Include(p => p.Grupos)
+                           .Where(w => w.Id == int.Parse(id))
+                           .Select(s => new
+                           {
+                               grupoId = s.Grupos.Id.ToString()
+                           });
+
+                        if (result.Count() > 0)
+                        {
+                            GruposController miGrupo = new GruposController();
+                            miRespuesta = miGrupo.Show(result.First().grupoId);
+                        }
+                        else
+                        {
+                            miRespuesta.code = 404;
+                            miRespuesta.mensaje = "no existe ningun personal con dicho id";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        miRespuesta.code = 500;
+                        miRespuesta.mensaje = "error interno";
+                    }
+                } 
+            }
+            else
+            {
+                miRespuesta.code = 404;
+                miRespuesta.mensaje = "no se ha dado el id";
+            }
 
 
 
+            return miRespuesta;
+        }
 
+
+        /// <summary>
+        /// Mostrar todos los personales del sistema
+        /// </summary>
+        /// <param name="cant">cantidad de registros a traer</param>
+        /// <param name="pag">pagina en la que se quiere estar</param>
+        /// <param name="orderBy">orden a implementar</param>
+        /// <returns>un modelo de respuesta</returns>
+        [HttpGet]
+        [Authorize(Roles = "A, J, D, C")]
+
+        public Respuesta Index(int cant, int pag, string orderBy)
+        {
+            Respuesta miRespuesta = new Respuesta();
 
             using (TUTORIASContext db = new TUTORIASContext())
             {
                 try
                 {
-
-
-
-                    if (cant != null & pag != null)
-                    {
-                        try
-                        {
-                            int cantidad = int.Parse(cant);
-                            int pagina = int.Parse(pag);
-                            var result = db.Personales
-                           .Include(p => p.Grupos)
-                           .Include(p => p.Usuario)
-                           .Include(p => p.Canalizaciones)
-                           .Select(s => new
+                    var result = db.Personales
+                       .Include(p => p.Grupos)
+                       .Include(p => p.Usuario)
+                       .Include(p => p.Canalizaciones)
+                       .Select(s => new
+                       {
+                           id = s.Id,
+                           usuario = new
                            {
-                               id = s.Id,
-                               usuario = new
-                               {
-                                   nombreCompleto = s.Usuario.NombreCompleto,
-                                   nombre = s.Usuario.Nombre,
-                                   apellidoMaterno = s.Usuario.ApellidoMaterno,
-                                   apellidoPaterno = s.Usuario.ApellidoPaterno,
-                                   genero = s.Usuario.Genero,
-                                   email = s.Usuario.Email
-                               },
-                               cargo = s.Cargo,
-                               departamento = new
-                               {
-                                   id = s.DepartamentoId,
-                                   titulo = s.Departamento.Titulo
-                               },
-                               tutorados = s.Grupos.Estudiantes.Count(),
-                               canalizaciones = s.Canalizaciones.Count(),
-                               posts = s.Posts.Count(),
-                               grupoId = s.Grupos.Id.ToString()
-                           }).Skip((cantidad * pagina) - cantidad).Take(cantidad).ToList();
+                               nombreCompleto = s.Usuario.NombreCompleto,
+                               nombre = s.Usuario.Nombre,
+                               apellidoMaterno = s.Usuario.ApellidoMaterno,
+                               apellidoPaterno = s.Usuario.ApellidoPaterno,
+                               genero = s.Usuario.Genero,
+                               email = s.Usuario.Email
+                           },
+                           cargo = s.Cargo,
+                           departamento = new
+                           {
+                               id = s.DepartamentoId,
+                               titulo = s.Departamento.Titulo
+                           },
+                           tutorados = s.Grupos.Estudiantes.Count(),
+                           canalizaciones = s.Canalizaciones.Count(),
+                           posts = s.Posts.Count(),
+                           grupoId = s.Grupos.Id.ToString()
+                       });
 
+                    if (!String.IsNullOrEmpty(orderBy))
+                    {
+                        result = result.OrderBy(orderBy);
+                    }
+                    if (cant != 0 & pag != 0)
+                    {
+                        int x = ((cant * pag) - cant);
+                        result = result.Skip((cant * pag) - cant).Take(cant);
+                    }
 
-                            if (result.Count() > 0)
-                            {
-                                miRespuesta.code = StatusCodes.Status200OK;
-                                miRespuesta.mensaje = "exito";
-                                miRespuesta.data = result;
-                            }
-                            else
-                            {
-                                miRespuesta.code = StatusCodes.Status404NotFound;
-                                miRespuesta.mensaje = "no hay registros";
-                                miRespuesta.data = result;
-                            }
-
-                        }
-                        catch
-                        {
-                            miRespuesta.code = StatusCodes.Status400BadRequest;
-                            miRespuesta.mensaje = "error con el numero de pag y numero de cantidad";
-                        }
+                    if (result.Count() > 0)
+                    {
+                        miRespuesta.mensaje = "exito";
+                        miRespuesta.code = StatusCodes.Status200OK;
+                        miRespuesta.data = result.ToList();
                     }
                     else
                     {
-                        var result = db.Personales
-                           .Include(p => p.Grupos)
-                           .Include(p => p.Usuario)
-                           .Include(p => p.Canalizaciones)
-                           .Select(s => new
-                           {
-                               id = s.Id,
-                               usuario = new
-                               {
-                                   nombreCompleto = s.Usuario.NombreCompleto,
-                                   nombre = s.Usuario.Nombre,
-                                   apellidoMaterno = s.Usuario.ApellidoMaterno,
-                                   apellidoPaterno = s.Usuario.ApellidoPaterno,
-                                   genero = s.Usuario.Genero,
-                                   email = s.Usuario.Email
-                               },
-                               cargo = s.Cargo,
-                               departamento = new
-                               {
-                                   id = s.DepartamentoId,
-                                   titulo = s.Departamento.Titulo
-                               },
-                               tutorados = s.Grupos.Estudiantes.Count(),
-                               canalizaciones = s.Canalizaciones.Count(),
-                               posts = s.Posts.Count(),
-                               grupoId = s.Grupos.Id.ToString()
-                           });
-                        if (result.Count() > 0)
-                        {
-                            miRespuesta.code = StatusCodes.Status200OK;
-                            miRespuesta.data = result.ToList();
-                            miRespuesta.mensaje = "exito";
-                        }
-                        else
-                        {
-                            miRespuesta.code = StatusCodes.Status404NotFound;
-                            miRespuesta.data = result.ToList();
-                            miRespuesta.mensaje = "no hay registros";
-                        }
-
+                        miRespuesta.mensaje = "no hay registros";
+                        miRespuesta.code = StatusCodes.Status404NotFound;
+                        miRespuesta.data = null;
                     }
-
-
-
 
                 }
                 catch (Exception ex)
@@ -224,11 +237,14 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
-
+        /// <summary>
+        /// Mostrar todo el personal del tecnologico
+        /// </summary>
+        /// <returns>un modelo de respuesta</returns>
         [Route("Tec")]
-        [AllowAnonymous]
         [HttpGet]
-        public Respuesta mostrarTec()
+        [Authorize(Roles = "A, J, D, C")]
+        public Respuesta Index()
         {
             Respuesta miRespuesta = new Respuesta();
             using (TUTORIASContext db = new TUTORIASContext())
@@ -256,12 +272,14 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
-
-
-
-        [AllowAnonymous]
+        /// <summary>
+        /// Insertar un personal
+        /// </summary>
+        /// <param name="personal">El objeto del personal en formato JSON</param>
+        /// <returns>Un modelo de respuesta</returns>
         [HttpPost]
-        public Respuesta Registrar([FromBody] Personales personal)
+        [Authorize(Roles = "A, J, D, C")]
+        public Respuesta Store([FromBody] Personales personal)
         {
 
             Respuesta miRespuesta = new Respuesta();
@@ -298,7 +316,7 @@ namespace TecAPI.Controllers
                             db.SaveChanges();
                             miRespuesta.mensaje = "Se ha insertado correctamente";
                             miRespuesta.code = 200;
-                            miRespuesta.data = mostrarPersonal(db.Personales.Where(w => w.Cve == personal.Cve).First().Id.ToString()).data;
+                            miRespuesta.data = Show(db.Personales.Where(w => w.Cve == personal.Cve).First().Id.ToString()).data;
                         }
                         catch (Exception ex)
                         {
@@ -322,12 +340,15 @@ namespace TecAPI.Controllers
 
         }
 
-
-        [AllowAnonymous]
+        /// <summary>
+        /// Actualizar un personal
+        /// </summary>
+        /// <param name="personal">El objeto del personal en formato JSON</param>
+        /// <returns>Un modelo de respuesta</returns>
         [HttpPut]
-        public Respuesta modificar([FromBody] Personales personal)
+        [Authorize(Roles = "A, J, D, C")]
+        public Respuesta Update([FromBody] Personales personal)
         {
-
             Respuesta miRespuesta = new Respuesta();
 
             if (personal != null)
@@ -413,6 +434,7 @@ namespace TecAPI.Controllers
                     {
                         miRespuesta.mensaje = "error en el sistema";
                         miRespuesta.code = 500;
+                        miRespuesta.data = ex;
                     }
                 }
                 else
@@ -426,8 +448,6 @@ namespace TecAPI.Controllers
                 miRespuesta.code = StatusCodes.Status400BadRequest;
                 miRespuesta.mensaje = "los datos no son enviados no son correctos";
             }
-
-
 
             return miRespuesta;
 

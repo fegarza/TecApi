@@ -4,43 +4,33 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using TecAPI.Responses;
 using TecAPI.Models.Request;
 using TecAPI.Models.Tutorias;
-using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using TecAPI.Response;
+
 
 namespace TecAPI.Controllers
 {
-
+    /// <summary>
+    /// Todo lo relacionado a los usuarios
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly IConfiguration configuration;
-
-
-        public UsuariosController(IConfiguration _configuration)
-        {
-            this.configuration = _configuration;
-        }
-
-
-
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id">Identificador del usuario</param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
         [AllowAnonymous]
-        public Respuesta Validar(string id)
+        public Respuesta Show(string id)
         {
             Respuesta miRespuesta = new Respuesta();
             if (id != null)
@@ -77,10 +67,14 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
-
+        /// <summary>
+        /// Mostrar el rango
+        /// </summary>
+        /// <param name="token">token</param>
+        /// <returns>Un modelo de respuesta</returns>
         [Route("type")]
         [HttpGet]
-        public Respuesta TraerTipo(string token)
+        public Respuesta ShowType(string token)
         {
             Respuesta miRespuesta = new Respuesta();
             try
@@ -112,31 +106,65 @@ namespace TecAPI.Controllers
         }
 
 
+        /// <summary>
+        /// Mostrar todos los usuario
+        /// </summary>
+        /// <param name="cant">cantidad de registros a traer</param>
+        /// <param name="pag">pagina en la que se quiere estar</param>
+        /// <param name="orderBy">orden a implementar</param>
+        /// <returns>un modelo de respuesta</returns>
         [HttpGet]
         //[Authorize(Roles = "ADMINISTRADOR")]
         [AllowAnonymous]
-        public Respuesta Mostrar()
+        public Respuesta Index(int cant, int pag, string orderBy)
         {
-            Respuesta respuesta = new Respuesta();
+            Respuesta miRespuesta = new Respuesta();
             try
             {
                 using (TUTORIASContext db = new TUTORIASContext())
                 {
-                    respuesta.code = 200;
-                    respuesta.data = db.Usuarios.ToArray();
+                    miRespuesta.code = 200;
+
+                    var result = db.Usuarios.Select(s => s.Estudiantes);
+                    if (!String.IsNullOrEmpty(orderBy))
+                    {
+                        result = result.OrderBy(orderBy);
+                    }
+                    if (cant != 0 & pag != 0)
+                    {
+                        int x = ((cant * pag) - cant);
+                        result = result.Skip((cant * pag) - cant).Take(cant);
+                    }
+
+                    if (result.Count() > 0)
+                    {
+                        miRespuesta.mensaje = "exito";
+                        miRespuesta.code = StatusCodes.Status200OK;
+                        miRespuesta.data = result.ToList();
+                    }
+                    else
+                    {
+                        miRespuesta.mensaje = "no hay registros";
+                        miRespuesta.code = StatusCodes.Status404NotFound;
+                        miRespuesta.data = null;
+                    }
                 }
             }
             catch
             {
-                respuesta.code = 500;
-                respuesta.mensaje = "Error en el sistema";
+                miRespuesta.code = 500;
+                miRespuesta.mensaje = "Error en el sistema";
             }
-            return respuesta;
+            return miRespuesta;
         }
 
 
-
-
+        /// <summary>
+        /// Iniciar sesion
+        /// </summary>
+        /// <param name="email">Correo electronico</param>
+        /// <param name="clave">Clave</param>
+        /// <returns>Un toekn validado</returns>
         [AllowAnonymous]
         [HttpGet]
         [Route("Login")]
@@ -147,10 +175,102 @@ namespace TecAPI.Controllers
             {
                 using (TUTORIASContext db = new TUTORIASContext())
                 {
+                    //Verificar si existe
+                    var busqueda = db.Usuarios.Include(i => i.Estudiantes).Include(i => i.Personales).Where(r => r.Email == email && r.Clave == clave);
+                    if (busqueda.Count() > 0)
+                    {
+                        respuesta.code = StatusCodes.Status200OK;
+                        //Tomar datos para el personal
+                        if (busqueda.First().Tipo == "P")
+                        {
+                            string ROL = busqueda.First().Personales.Cargo;
+                            var claims = new[]
+                            {
+                                new Claim(ClaimTypes.Role, ROL),
+                                new Claim("rol",  ROL),
+                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                            };
+                            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("wW7pPV7ngghwWxpNLc7N8SQPhjXcPQEMtHwpfiknpJqkr5aX1kSDsNnndqWLXWkx"));
+                            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                            var expiration = DateTime.UtcNow.AddHours(5);
+                            JwtSecurityToken token = new JwtSecurityToken(
+                                issuer: "dominio.com",
+                                audience: "dominio.com",
+                                claims: claims,
+                                expires: expiration,
+                                signingCredentials: credentials
+                            );
+                            var tokenS = new JwtSecurityTokenHandler().WriteToken(token);
+                            respuesta.data = busqueda.Select(s => new
+                            {
+                                token = tokenS.ToString(),
+                                nombre = s.Nombre,
+                                nombreCompleto = s.NombreCompleto,
+                                apellidoMaterno = s.ApellidoMaterno,
+                                apellidoPaterno = s.ApellidoPaterno,
+                                correo = s.Email,
+                                genero = s.Genero,
+                                personal = new
+                                {
+                                    id = s.Personales.Id,
+                                    cargo = s.Personales.Cargo
+                                }
+                            }).First();
+                            
+                        }
+                        //Tomar datos para el estudiante
+                        else
+                        {
+                            var claims = new[]
+                            {
+                                new Claim(ClaimTypes.Role, "E"),
+                                new Claim("rol",  "E"),
+                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                            };
+                            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("wW7pPV7ngghwWxpNLc7N8SQPhjXcPQEMtHwpfiknpJqkr5aX1kSDsNnndqWLXWkx"));
+                            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                            var expiration = DateTime.UtcNow.AddHours(5);
+                            JwtSecurityToken token = new JwtSecurityToken(
+                                issuer: "dominio.com",
+                                audience: "dominio.com",
+                                claims: claims,
+                                expires: expiration,
+                                signingCredentials: credentials
+                            );
+                            var tokenS = new JwtSecurityTokenHandler().WriteToken(token);
+                            respuesta.data = busqueda.Select(s => new
+                            {
+                                token = tokenS.ToString(),
+                                nombre = s.Nombre,
+                                nombreCompleto = s.NombreCompleto,
+                                apellidoMaterno = s.ApellidoMaterno,
+                                apellidoPaterno = s.ApellidoPaterno,
+                                correo = s.Email,
+                                genero = s.Genero,
+                                estudiante = new
+                                {
+                                    id = s.Estudiantes.Id,
+                                    numeroDeControl = s.Estudiantes.NumeroDeControl,
+                                    grupoId = s.Estudiantes.GrupoId,
+                                    semestre = s.Estudiantes.Semestre,
+                                    carrera = s.Estudiantes.Carrera
+                                }
+                            }).First();
+                        }
+                    }
+                    else
+                    {
+                        respuesta.code = StatusCodes.Status404NotFound;
+                        respuesta.mensaje = "No existe el usuario dado";
+                    }
+
+
+
+                    /*
                     //Buscamos el usuario con los datos dados
                     var result = db.Usuarios
                        .Where(r => r.Email == email && r.Clave == clave)
-                       .Select(s => new RUsuario()
+                       .Select(s => new
                        {
                            nombre = s.Nombre,
                            nombreCompleto = s.NombreCompleto,
@@ -158,12 +278,11 @@ namespace TecAPI.Controllers
                            apellidoPaterno = s.ApellidoPaterno,
                            correo = s.Email,
                            genero = s.Genero,
-                           tipo = s.Tipo
+                           estudiante = s.Estudiantes
                        });
                     if (result.Count() > 0)
                     {
-
-                        RUsuario miUsuario = result.First();
+                        var = result.First();
                         //Claims
                         if (miUsuario.tipo == "E")
                         {
@@ -197,7 +316,8 @@ namespace TecAPI.Controllers
                         {
                             var result2 = db.Usuarios
                                 .Where(r => r.Email == email && r.Clave == clave)
-                                .Select(s => new {
+                                .Select(s => new
+                                {
                                     cargo = s.Personales.Cargo,
                                     identificador = s.Personales.Id.ToString()
                                 });
@@ -224,7 +344,7 @@ namespace TecAPI.Controllers
                             respuesta.data = miUsuario;
                             respuesta.mensaje = "exito";
                         }
-
+                       
 
 
                     }
@@ -232,7 +352,7 @@ namespace TecAPI.Controllers
                     {
                         respuesta.code = StatusCodes.Status404NotFound;
                         respuesta.mensaje = "no existe ningun usuario con estos datos";
-                    }
+                    } */
                 }
             }
             catch (Exception ex)
@@ -243,9 +363,78 @@ namespace TecAPI.Controllers
             return respuesta;
         }
 
+        [AllowAnonymous]
+        [HttpPut]
+        public Respuesta Modificar([FromBody] Usuarios miUsuario)
+        {
+            Respuesta miRespuesta = new Respuesta();
+
+            if (miUsuario != null)
+            {
+                if (!String.IsNullOrEmpty(miUsuario.Id.ToString()))
+                {
+                    try
+                    {
+                        using (TUTORIASContext db = new TUTORIASContext())
+                        {
+                            var result = db.Usuarios.Where(r => r.Id == miUsuario.Id);
+                            if (result.Count() > 0)
+                            {
+                                try
+                                {
+                                    List<string> acciones = new List<string>();
+                                    List<string> errores = new List<string>();
+
+                                    if (!String.IsNullOrEmpty(miUsuario.Email))
+                                    {
+                                        result.First().Email = miUsuario.Email;
+                                        acciones.Add("se ha cambiado el email con exito");
+                                    }
+                                    if (!String.IsNullOrEmpty(miUsuario.Clave))
+                                    {
+                                        result.First().Clave = miUsuario.Clave;
+                                        acciones.Add("se ha cambiado la clave con exito");
+                                    }
 
 
+                                    db.SaveChanges();
+                                    miRespuesta.mensaje = "exito";
+                                    miRespuesta.data = new { acciones, errores };
+                                    miRespuesta.code = StatusCodes.Status200OK;
+                                }
+                                catch
+                                {
+                                    miRespuesta.mensaje = "error al establecer datos al usuario";
+                                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                                }
+                            }
+                            else
+                            {
+                                miRespuesta.mensaje = "no existe un usuario con ese id";
+                                miRespuesta.code = 500;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        miRespuesta.mensaje = "error en el sistema";
+                        miRespuesta.code = 500;
+                    }
+                }
+                else
+                {
+                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                    miRespuesta.mensaje = "no se ha dado el id del usuario";
+                }
+            }
+            else
+            {
+                miRespuesta.code = StatusCodes.Status400BadRequest;
+                miRespuesta.mensaje = "los datos no son enviados no son correctos";
+            }
 
+            return miRespuesta;
+        }
 
     }
 }

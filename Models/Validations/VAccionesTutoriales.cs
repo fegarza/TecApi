@@ -26,6 +26,12 @@ namespace TecAPI.Models.Tutorias
             public bool Obligatorio { get; set; }
 
         }
+
+
+        public object xd()
+        {
+            return "xd";
+        }
     }
 
 }

@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>TecAPI</name>
+    </assembly>
+    <members>
+        <member name="T:TecAPI.Controllers.AccionesController">
+            <summary>
+            Todo lo relacionado con las acciones tutoriales
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.AccionesController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todas las acciones tutoriales disponibles
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.AccionesController.Store(TecAPI.Models.Tutorias.AccionesTutoriales)">
+            <summary>
+            Registra una nueva accion tutorial
+            </summary>
+            <param name="accion">el objeto en formato JSON</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.AccionesController.Update(TecAPI.Models.Tutorias.AccionesTutoriales)">
+            <summary>
+            Actualizar una accion tutorial
+            </summary>
+            <param name="miAccion">Objeto a actualizar</param>
+            <returns>un estado de la operacion</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.AtencionesController">
+            <summary>
+            Todo lo relacionado con las atenciones
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.AtencionesController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar las atenciones
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.CanalizacionesController">
+            <summary>
+            Todo lo relacionado con las canalizaciones
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.CanalizacionesController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Muestra todos las acciones
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.CanalizacionesController.Store(TecAPI.Models.Tutorias.Canalizaciones)">
+            <summary>
+            Insertar una nueva canalizacion
+            </summary>
+            <param name="canalizacion">El objeto en formato JSON</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.DepartamentosController">
+            <summary>
+            Todo lo relacionado con los departamentos
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todos los departamentos
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.Show(System.String)">
+            <summary>
+            Mostrar un departamento en especifico
+            </summary>
+            <param name="id">id </param>
+            <returns>un departamento</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.IndexAcciones(System.String)">
+            <summary>
+            Mostrar las acciones tutoriales pertenecientes
+            </summary>
+            <param name="id">identificador del departamento</param>
+            <returns></returns>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.Indexgrupos(System.String)">
+            <summary>
+            Mostrar todos los grupos pertenecientes
+            </summary>
+            <param name="id">identificador del departamento</param>
+            <returns></returns>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.IndexCanalizaciones(System.String)">
+            <summary>
+            Mostrar todas las canalizaciones pertenecientes
+            </summary>
+            <param name="id">identificador del departamento</param>
+            <returns></returns>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.IndexPersonales(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todo el personal de un departamento dado
+            </summary>
+            <param name="id">identificador del departamento</param>
+            <returns>El personal de un departamento</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.EstudiantesController">
+            <summary>
+            Todo lo relacionado con los estudiantes
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.EstudiantesController.IndexCreditos(System.String)">
+            <summary>
+            Mostrar creditos de un estudiante
+            </summary>
+            <param name="_numeroControl">Identificador del estudiante</param>
+            <returns>cantidad de creditos</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.EstudiantesController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todos los estudiantes
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.EstudiantesController.Show(System.String)">
+            <summary>
+            Mostrar un alumno en especifico
+            </summary>
+            <param name="numeroDeControl">Identificador del alumno</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.EstudiantesController.Update(TecAPI.Models.Tutorias.Estudiantes)">
+            <summary>
+            Actualizar un estudiante
+            </summary>
+            <param name="miEstudiante">Objeto del estudiante en formato JSON</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.EstudiantesController.Store(TecAPI.Models.Tutorias.Estudiantes)">
+            <summary>
+            Registrar un nuevo estudiante
+            </summary>
+            <param name="estudiante">Objeto del estudiante en formato JSON</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.GruposController">
+            <summary>
+            Todo lo relacionado a los grupos
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todos los grupos
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.Show(System.String)">
+            <summary>
+            Mostrar un grupo en especifico
+            </summary>
+            <param name="id">Identificador del grupo</param>
+            <returns>Modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.Store(TecAPI.Models.Tutorias.Grupos)">
+            <summary>
+            Insertar un grupo
+            </summary>
+            <param name="grupo">Objeto del grupo en formato JSON</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.ShowSesiones(System.String)">
+            <summary>
+            Mostrar las sesiones de un grupo en especifico
+            </summary>
+            <param name="id">Identificador del grupo</param>
+            <returns>Modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.ShowAsistencias(System.String,System.String)">
+            <summary>
+            Mostrar una sesion en especifico de un grupo en especifico
+            </summary>
+            <param name="id">Identificador del grupo</param>
+            <param name="sesionId">Identificador de la sesion</param>
+            <returns>Modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.StoreSesion(System.String,System.String,System.Collections.Generic.List{TecAPI.Models.Tutorias.Estudiantes})">
+            <summary>
+            Insertar la lista de asistencias en una sesion
+            </summary>
+            <param name="id">id del grupo</param>
+            <param name="sesionId">id de la sesion</param>
+            <param name="estudiantes">arreglo de estudiantes</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.PersonalesController">
+            <summary>
+            Todo lo relacionado a los personales
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.PersonalesController.Show(System.String)">
+            <summary>
+            Mostrar un personal en especifico
+            </summary>
+            <param name="id">Identificador del personal</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.PersonalesController.ShowGrupo(System.String)">
+            <summary>
+            Mostrar un personal en especifico
+            </summary>
+            <param name="id">Identificador del personal</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.PersonalesController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todos los personales del sistema
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.PersonalesController.Index">
+            <summary>
+            Mostrar todo el personal del tecnologico
+            </summary>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.PersonalesController.Store(TecAPI.Models.Tutorias.Personales)">
+            <summary>
+            Insertar un personal
+            </summary>
+            <param name="personal">El objeto del personal en formato JSON</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.PersonalesController.Update(TecAPI.Models.Tutorias.Personales)">
+            <summary>
+            Actualizar un personal
+            </summary>
+            <param name="personal">El objeto del personal en formato JSON</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.SesionesController">
+            <summary>
+            Todo lo relacionado a las sesiones
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.SesionesController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todas las sesiones
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.SesionesController.Store(TecAPI.Models.Tutorias.Sesiones)">
+            <summary>
+            Insertar una sesion
+            </summary>
+            <param name="sesion">El objeto sesion en formato JSON</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.TitulosController">
+            <summary>
+            Todo lo relacionado a los titulos
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.TitulosController.MostrarTodos">
+            <summary>
+            Mostrar todos los titulos disponibles
+            </summary>
+            <returns>Un modelo de respusta</returns>
+        </member>
+        <member name="T:TecAPI.Controllers.UsuariosController">
+            <summary>
+            Todo lo relacionado a los usuarios
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.UsuariosController.Show(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id">Identificador del usuario</param>
+            <returns></returns>
+        </member>
+        <member name="M:TecAPI.Controllers.UsuariosController.ShowType(System.String)">
+            <summary>
+            Mostrar el rango
+            </summary>
+            <param name="token">token</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.UsuariosController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todos los usuario
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.UsuariosController.Login(System.String,System.String)">
+            <summary>
+            Iniciar sesion
+            </summary>
+            <param name="email">Correo electronico</param>
+            <param name="clave">Clave</param>
+            <returns>Un toekn validado</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.ValuesController.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:TecAPI.Controllers.ValuesController.Get">
+            <summary>
+            Esto solo es una prueba
+            </summary>
+            <returns>retorna una prueba </returns>
+        </member>
+    </members>
+</doc>

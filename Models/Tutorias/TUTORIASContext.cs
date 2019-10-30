@@ -1,4 +1,8 @@
-﻿using System;
+﻿#define PROD
+#undef PROD
+#define LOCAL
+#undef LOCAL
+using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -37,7 +41,16 @@ namespace TecAPI.Models.Tutorias
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+#if PROD
+                 optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
+#else
+
+#if LOCAL
                 optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; User ID=sa;Password=7271;Trusted_Connection=False");
+#else
+                optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; User ID=pipe;Password=7271;Trusted_Connection=False");
+#endif
+#endif
             }
         }
 
@@ -48,10 +61,14 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<AccionesTutoriales>(entity =>
             {
                 entity.HasIndex(e => e.Fecha)
-                    .HasName("UQ__Acciones__B30C8A5E32B4A91C")
+                    .HasName("UQ__Acciones__B30C8A5EC84ABCEA")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Activo)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.Contenido)
                     .IsRequired()
@@ -151,7 +168,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Carreras>(entity =>
             {
                 entity.HasIndex(e => e.Carcve)
-                    .HasName("UQ__Carreras__5501AA81808942ED")
+                    .HasName("UQ__Carreras__5501AA815CC3E365")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -166,6 +183,10 @@ namespace TecAPI.Models.Tutorias
 
             modelBuilder.Entity<Departamentos>(entity =>
             {
+                entity.HasIndex(e => e.Titulo)
+                    .HasName("UQ__Departam__7B406B5680D568F6")
+                    .IsUnique();
+
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .ValueGeneratedOnAdd();
@@ -179,16 +200,22 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Estudiantes>(entity =>
             {
                 entity.HasIndex(e => e.NumeroDeControl)
-                    .HasName("UQ__Estudian__85382F59D8EF7B73")
+                    .HasName("UQ__Estudian__85382F5954AF33A4")
                     .IsUnique();
 
                 entity.HasIndex(e => e.UsuarioId)
-                    .HasName("UQ__Estudian__2B3DE799449B119E")
+                    .HasName("UQ__Estudian__2B3DE799B4C9CCC8")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.CarreraId).HasColumnName("CarreraID");
+
+                entity.Property(e => e.Estado)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('A')");
 
                 entity.Property(e => e.GrupoId).HasColumnName("GrupoID");
 
@@ -222,117 +249,202 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<EstudiantesDatos>(entity =>
             {
                 entity.HasIndex(e => e.EstudianteId)
-                    .HasName("UQ__Estudian__6F768339276150DA")
+                    .HasName("UQ__Estudian__6F7683396266899F")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
 
                 entity.Property(e => e.BecadoPor)
                     .HasMaxLength(18)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CalleDomicilio)
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CependenciaEconomica)
                     .HasMaxLength(13)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CiudadNacimiento)
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CodigoPostalDomicilio)
                     .HasMaxLength(10)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.ColoniaDomicilio)
                     .HasMaxLength(30)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.DificultadDormir).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.DoloresCabezaVomito).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.DoloresVientre).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Empresa)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.EstadoCivil)
                     .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.EstadoNacimiento)
                     .HasMaxLength(30)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.EstudianteId).HasColumnName("EstudianteID");
 
                 entity.Property(e => e.EstudiosMadre)
                     .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.EstudiosPadre)
                     .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
-                entity.Property(e => e.FechaModificacion).HasColumnType("datetime");
+                entity.Property(e => e.FatigaAgotamiento).HasDefaultValueSql("((0))");
 
-                entity.Property(e => e.FechaNacimiento).HasColumnType("datetime");
+                entity.Property(e => e.FechaModificacion)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.FechaNacimiento)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.Horario)
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Incontinencia).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.LugarTrabajoFamiliar)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.LugarTrabajoMadre)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.LugarTrabajoPadre)
                     .HasMaxLength(100)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.MadreVive).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.ManosPiesHinchados).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.MiedosIntensos).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Nss)
                     .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.NumDomicilio)
                     .HasMaxLength(20)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.NumeroHijos).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.ObservacionesHigiene)
                     .HasMaxLength(200)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.PadreVive).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PerdidaEquilibrio).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PerdidaVistaOido).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PesadillasTerroresNocturnos).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.PesadillasTerroresNocturnosAque)
                     .HasColumnName("PesadillasTerroresNocturnosAQue")
                     .HasMaxLength(200)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.PrescripcionLenguaje).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionMotriz).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionOido).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionSistemaCirculatorio).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionSistemaDigestivo).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionSistemaNervioso).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionSistemaOseo).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionSistemaOtro).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionSistemaRespiratorio).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.PrescripcionVista).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Tartamudeos).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.TelefonoDomicilio)
                     .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.TelefonoMovil)
                     .HasMaxLength(15)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.TelefonoTrabajoFamiliar)
                     .HasMaxLength(10)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.TelefonoTrabajoMadre)
                     .HasMaxLength(10)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.TelefonoTrabajoPadre)
                     .HasMaxLength(10)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.TieneBeca).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.Trabaja).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.TratamientoPsicologicoPsiquiatrico).HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.TratamientoPsicologicoPsiquiatricoExplicacion).HasDefaultValueSql("((0))");
 
                 entity.HasOne(d => d.Estudiante)
                     .WithOne(p => p.EstudiantesDatos)
                     .HasForeignKey<EstudiantesDatos>(d => d.EstudianteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EstudiantesDatos_Estudiante");
             });
 
@@ -369,7 +481,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Grupos>(entity =>
             {
                 entity.HasIndex(e => e.PersonalId)
-                    .HasName("UQ__Grupos__283437127E2CE395")
+                    .HasName("UQ__Grupos__28343712C464EC43")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -390,11 +502,11 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Personales>(entity =>
             {
                 entity.HasIndex(e => e.Cve)
-                    .HasName("UQ__Personal__C1FE2DBEF2963B2D")
+                    .HasName("UQ__Personal__C1FE2DBE88597DA0")
                     .IsUnique();
 
                 entity.HasIndex(e => e.UsuarioId)
-                    .HasName("UQ__Personal__2B3DE799FCBE890C")
+                    .HasName("UQ__Personal__2B3DE7997CDEEF1D")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -518,6 +630,10 @@ namespace TecAPI.Models.Tutorias
 
             modelBuilder.Entity<Titulos>(entity =>
             {
+                entity.HasIndex(e => e.Titulo)
+                    .HasName("UQ__Titulos__7B406B567D301CFF")
+                    .IsUnique();
+
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .ValueGeneratedOnAdd();
@@ -531,7 +647,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Usuarios>(entity =>
             {
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Usuarios__A9D105347AD0042C")
+                    .HasName("UQ__Usuarios__A9D10534584570C7")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");

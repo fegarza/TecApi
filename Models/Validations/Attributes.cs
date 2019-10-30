@@ -134,4 +134,22 @@ namespace TecAPI.Models.Tutorias
 
 
     }
+    public class NotNull : ValidationAttribute
+    {
+
+        public override bool IsValid(object value)
+        {
+            if (String.IsNullOrEmpty(value.ToString()) || value == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
+        }
+
+
+    }
 }

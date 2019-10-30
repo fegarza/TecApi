@@ -1,34 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using TecAPI.Models.Escolares;
 using TecAPI.Models.Request;
 using TecAPI.Models.Tec;
 using TecAPI.Models.Tutorias;
-using TecAPI.Response;
- 
+
 namespace TecAPI.Controllers
 {
 
-
+    /// <summary>
+    /// Todo lo relacionado con los estudiantes
+    /// </summary>
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "A, C, J, D, T, E")]
     [ApiController]
     public class EstudiantesController : ControllerBase
     {
-
-        public static int mostrarCreditos(string _numeroControl)
+        /// <summary>
+        /// Mostrar creditos de un estudiante
+        /// </summary>
+        /// <param name="_numeroControl">Identificador del estudiante</param>
+        /// <returns>cantidad de creditos</returns>
+        public static int IndexCreditos(string _numeroControl)
         {
             int creditos = 0;
             using (EscolaresContext db2 = new EscolaresContext())
@@ -38,18 +36,22 @@ namespace TecAPI.Controllers
             return creditos;
         }
 
-
-        [AllowAnonymous]
+        /// <summary>
+        /// Mostrar todos los estudiantes
+        /// </summary>
+        /// <param name="cant">cantidad de registros a traer</param>
+        /// <param name="pag">pagina en la que se quiere estar</param>
+        /// <param name="orderBy">orden a implementar</param>
+        /// <returns>un modelo de respuesta</returns>
         [HttpGet]
-        public Respuesta mostrarTodos(string cant, string pag, string correo)
+        [Authorize(Roles = "A, C, J, D")]
+        public Respuesta Index(int cant, int pag, string orderBy)
         {
             Respuesta miRespuesta = new Respuesta();
             try
             {
                 using (TUTORIASContext db = new TUTORIASContext())
                 {
-                    
-                   
                     var result = db.Estudiantes
                         .Include(i => i.Grupo)
                         .Include(i => i.Usuario)
@@ -81,71 +83,54 @@ namespace TecAPI.Controllers
                             numeroDeControl = s.NumeroDeControl,
                             sesiones = (s.EstudiantesSesiones.Count() + s.SesionesIniciales),
                             canalizaciones = s.Canalizaciones.Count(),
-                            creditos = mostrarCreditos(s.NumeroDeControl),
+                            creditos = IndexCreditos(s.NumeroDeControl),
                             semestre = s.Semestre
 
                         });
-                    if (cant != null & pag != null)
+                    if (!String.IsNullOrEmpty(orderBy))
                     {
-                        try
-                        {
-                            int cantidad = int.Parse(cant);
-                            int pagina = int.Parse(pag);
-                            var resut2 = result.Skip((cantidad * pagina) - cantidad).Take(cantidad).ToList();
-                            if (resut2.Count() > 0)
-                            {
-                                miRespuesta.code = StatusCodes.Status200OK;
-                                miRespuesta.mensaje = "exito";
-                                miRespuesta.data = resut2;
-                            }
-                            else
-                            {
-                                miRespuesta.code = StatusCodes.Status404NotFound;
-                                miRespuesta.mensaje = "no hay registros";
-                                miRespuesta.data = resut2;
-                            }
-              
-                        }
-                        catch
-                        {
-                            miRespuesta.code = StatusCodes.Status400BadRequest;
-                            miRespuesta.mensaje = "error con el numero de pag y numero de cantidad";
-                        }
+                        result = result.OrderBy(orderBy);
+                    }
+                    if (cant != 0 & pag != 0)
+                    {
+                        int x = ((cant * pag) - cant);
+                        result = result.Skip((cant * pag) - cant).Take(cant);
+                    }
+
+                    if (result.Count() > 0)
+                    {
+                        miRespuesta.mensaje = "exito";
+                        miRespuesta.code = StatusCodes.Status200OK;
+                        miRespuesta.data = result.ToList();
                     }
                     else
                     {
-                        if(result.Count() > 0)
-                        {
-                            miRespuesta.code = 200;
-                            miRespuesta.data = result.ToList();
-                            miRespuesta.mensaje = "exito";
-                        }
-                        else
-                        {
-                            miRespuesta.code = StatusCodes.Status404NotFound;
-                            miRespuesta.data = result.ToList();
-                            miRespuesta.mensaje = "no hay registros";
-                        }
-                      
+                        miRespuesta.mensaje = "no hay registros";
+                        miRespuesta.code = StatusCodes.Status404NotFound;
+                        miRespuesta.data = null;
                     }
-
-
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 miRespuesta.code = StatusCodes.Status500InternalServerError;
                 miRespuesta.mensaje = "error";
                 miRespuesta.data = ex;
-             }
+            }
             return miRespuesta;
 
         }
 
+
+        /// <summary>
+        /// Mostrar un alumno en especifico
+        /// </summary>
+        /// <param name="numeroDeControl">Identificador del alumno</param>
+        /// <returns>un modelo de respuesta</returns>
         [Route("{numeroDeControl}")]
-        [AllowAnonymous]
         [HttpGet]
-        public Respuesta mostrarAlumno(string numeroDeControl)
+        [AllowAnonymous]
+        public Respuesta Show(string numeroDeControl)
         {
             Respuesta miRespuesta = new Respuesta();
             try
@@ -160,6 +145,7 @@ namespace TecAPI.Controllers
 
                     var result = db.Estudiantes
                         .Include(i => i.Grupo)
+                        .Include(i => i.Grupo.Personal)
                         .Include(i => i.Usuario)
                         .Select(s => new
                         {
@@ -178,8 +164,10 @@ namespace TecAPI.Controllers
                             {
                                 id = s.GrupoId,
                                 salon = s.Grupo.Salon,
-                                tutor = new
+                                personal = new
                                 {
+                                    id = (s.Grupo.Personal != null ? s.Grupo.PersonalId : 0),
+                                    departamentoId = (s.Grupo.Personal != null ? s.Grupo.Personal.DepartamentoId : 0),
                                     usuario = new
                                     {
                                         nombreCompleto = s.Grupo.Personal.Usuario.NombreCompleto
@@ -218,17 +206,19 @@ namespace TecAPI.Controllers
 
         }
 
-
-        [AllowAnonymous]
+        /// <summary>
+        /// Actualizar un estudiante
+        /// </summary>
+        /// <param name="miEstudiante">Objeto del estudiante en formato JSON</param>
+        /// <returns>un modelo de respuesta</returns>
         [HttpPut]
-        public Respuesta modificar([FromBody] Estudiantes miEstudiante)
+        [Authorize(Roles = "A, C, J, D")]
+        public Respuesta Update([FromBody] Estudiantes miEstudiante)
         {
-
             Respuesta miRespuesta = new Respuesta();
-
             if (miEstudiante != null)
             {
-                if(!String.IsNullOrEmpty(miEstudiante.NumeroDeControl))
+                if (!String.IsNullOrEmpty(miEstudiante.NumeroDeControl))
                 {
                     try
                     {
@@ -243,7 +233,7 @@ namespace TecAPI.Controllers
 
                                     List<string> acciones = new List<string>();
                                     List<string> errores = new List<string>();
-                                    if(miEstudiante.GrupoId != null)
+                                    if (miEstudiante.GrupoId != null)
                                     {
                                         if (db.Grupos.Where(r => r.Id == miEstudiante.GrupoId).Count() > 0)
                                         {
@@ -258,7 +248,7 @@ namespace TecAPI.Controllers
                                     }
                                     if (miEstudiante.CarreraId != 0)
                                     {
-                                        if(db.Carreras.Where(r=> r.Id == miEstudiante.CarreraId).Count() >0)
+                                        if (db.Carreras.Where(r => r.Id == miEstudiante.CarreraId).Count() > 0)
                                         {
                                             result.First().CarreraId = miEstudiante.CarreraId;
                                             acciones.Add("se ha cambiado la carrera con exito");
@@ -269,12 +259,12 @@ namespace TecAPI.Controllers
 
                                         }
                                     }
-                                    if(miEstudiante.SesionesIniciales != 0)
-                                    {   
-                                            result.First().SesionesIniciales = miEstudiante.SesionesIniciales;
-                                            acciones.Add("se han establecido las sesiones iniciales con exito");
+                                    if (miEstudiante.SesionesIniciales != 0)
+                                    {
+                                        result.First().SesionesIniciales = miEstudiante.SesionesIniciales;
+                                        acciones.Add("se han establecido las sesiones iniciales con exito");
                                     }
-                                    
+
                                     db.SaveChanges();
                                     miRespuesta.mensaje = "exito";
                                     miRespuesta.data = new { acciones, errores };
@@ -314,16 +304,22 @@ namespace TecAPI.Controllers
             }
 
 
-           
+
             return miRespuesta;
 
         }
 
+
+        /// <summary>
+        /// Registrar un nuevo estudiante
+        /// </summary>
+        /// <param name="estudiante">Objeto del estudiante en formato JSON</param>
+        /// <returns>un modelo de respuesta</returns>
         [AllowAnonymous]
         [HttpPost]
-        public Respuesta Registrar([FromBody] Estudiantes estudiante)
+        public Respuesta Store([FromBody] Estudiantes estudiante)
         {
-            
+
             Respuesta miRespuesta = new Respuesta();
 
             if (!ModelState.IsValid)
@@ -358,11 +354,12 @@ namespace TecAPI.Controllers
                             {
                                 estudiante.CarreraId = db.Carreras
                                     .Where(w => w.Carcve == short.Parse(TECDB.TraerCarrera(estudiante.NumeroDeControl))).First().Id;
+                                estudiante.EstudiantesDatos = new EstudiantesDatos();
                                 db.Estudiantes.Add(estudiante);
                                 db.SaveChanges();
                                 miRespuesta.mensaje = "Se ha insertado correctamente";
                                 miRespuesta.code = StatusCodes.Status200OK;
-                                miRespuesta.data = mostrarAlumno(estudiante.NumeroDeControl).data;
+                                miRespuesta.data = Show(estudiante.NumeroDeControl).data;
                             }
                             catch (Exception ex)
                             {
@@ -547,8 +544,5 @@ namespace TecAPI.Controllers
             */
         }
 
-
-        
-        
     }
 }

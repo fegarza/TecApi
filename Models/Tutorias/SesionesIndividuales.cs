@@ -9,7 +9,9 @@ namespace TecAPI.Models.Tutorias
         public int PersonalId { get; set; }
         public int EstudianteId { get; set; }
         public string Descripcion { get; set; }
+        public int AccionTutorialId { get; set; }
 
+        public virtual AccionesTutoriales AccionTutorial { get; set; }
         public virtual Estudiantes Estudiante { get; set; }
         public virtual Personales Personal { get; set; }
     }

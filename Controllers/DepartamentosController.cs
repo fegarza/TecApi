@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -38,8 +39,11 @@ namespace TecAPI.Controllers
                          .Select(s => new
                          {
                              id = s.Id,
-                             titulo = s.Titulo
+                             titulo = s.Titulo,
+                             tutorados = db.Estudiantes.Include(i => i.Grupo.Personal).Where(w => w.Grupo.Personal.DepartamentoId == s.Id).Count(),
+                             tutores = s.Personales.Count()
                          });
+                 
                     if (!String.IsNullOrEmpty(orderBy))
                     {
                         result = result.OrderBy(orderBy);
@@ -156,8 +160,8 @@ namespace TecAPI.Controllers
                             if (primeraObligatoria.Count() > 0)
                             {
                                 miRespuesta.data = db.AccionesTutoriales
-                                    .Where(w => w.Fecha <= primeraObligatoria.First()
-                                    .Fecha && !AccionesTomadas.Contains(w.Id))
+                                    .Where(w => w.Tipo == "G" && w.Fecha <= primeraObligatoria.First()
+                                    .Fecha && !AccionesTomadas.Contains(w.Id)) 
                                     .Select(s=>
                                     new {
                                         id = s.Id,
@@ -173,7 +177,7 @@ namespace TecAPI.Controllers
                             else
                             {
                                 miRespuesta.data = db.AccionesTutoriales
-                                    .Where(w => !AccionesTomadas.Contains(w.Id) && w.Fecha > obligatorias.Last().Fecha)
+                                    .Where(w => w.Tipo == "G" && !AccionesTomadas.Contains(w.Id) && w.Fecha > obligatorias.Last().Fecha)
                                     .Select(s =>
                                     new {
                                         id = s.Id,
@@ -193,7 +197,7 @@ namespace TecAPI.Controllers
                             var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
                             if (primeraObligatoria.Count() > 0)
                             {
-                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Fecha <= primeraObligatoria.First().Fecha)
+                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha)
                                     .Select(s =>
                                     new {
                                         id = s.Id,
@@ -208,7 +212,7 @@ namespace TecAPI.Controllers
                             }
                             else
                             {
-                                miRespuesta.data = db.AccionesTutoriales.Select(s=>
+                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G").Select(s=>
                                     new {
                                         id = s.Id,
                                         titulo = s.Titulo,
@@ -228,7 +232,7 @@ namespace TecAPI.Controllers
                         var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
                         if(primeraObligatoria.Count() > 0)
                         {
-                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Fecha <= primeraObligatoria.First().Fecha)
+                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha)
                                 .Select(s =>
                                     new {
                                         id = s.Id,
@@ -243,7 +247,7 @@ namespace TecAPI.Controllers
                         }
                         else
                         {
-                            miRespuesta.data = db.AccionesTutoriales
+                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G")
                                 .Select(s =>
                                     new {
                                         id = s.Id,
@@ -259,133 +263,6 @@ namespace TecAPI.Controllers
 
                         
                     }
-
-                  
-
-
-
-
-                    /*
-
-
-                    var sesionesObligatoriasTomadas =
-                        db.Sesiones
-                        .Include(i => i.AccionTutorial)
-                        .Where(s => s.DepartamentoId == int.Parse(id) && s.AccionTutorial.Obligatorio == true);
-
-                    var AccionesSinTomar = db.AccionesTutoriales
-                        .Where(w => !AccionesTomadas.Contains(w.Id))
-                        .Select(s =>
-                        new
-                        {
-                            s.Id,
-                            titulo = s.Titulo,
-                            contenido = s.Contenido,
-                            fecha = s.Fecha.ToShortDateString(),
-                            personalId = s.PersonalId,
-                            obligatorio = s.Obligatorio,
-                        });
-
-
-                    if (AccionesTomadas.Count() > 0 && AccionesSinTomar.Count() > 0)
-                    {
-
-                        if (sesionesObligatoriasTomadas.Count() > 0)
-                        {
-                            //Tomamos la mas reciente
-                            var ultimaSesionObligatoriaFecha = sesionesObligatoriasTomadas.Max(m => m.AccionTutorial.Fecha);
-                            List<object> resultado = new List<object>();
-                            bool encontrado = false;
-                            foreach (var x in AccionesSinTomar.Where(w => DateTime.Parse(w.fecha) > ultimaSesionObligatoriaFecha))
-                            {
-                                if (!encontrado)
-                                {
-                                    if (x.obligatorio == true)
-                                    {
-                                        resultado.Add(x);
-                                        encontrado = true;
-                                    }
-                                    else
-                                    {
-                                        resultado.Add(x);
-                                    }
-                                }
-                                else
-                                {
-                                    miRespuesta.code = StatusCodes.Status200OK;
-                                    miRespuesta.data = resultado;
-                                    miRespuesta.mensaje = "exito";
-                                }
-                            }
-                            miRespuesta.code = StatusCodes.Status200OK;
-                            miRespuesta.data = resultado;
-                            miRespuesta.mensaje = "exito";
-                        }
-                        else
-                        {
-                            List<object> resultado = new List<object>();
-                            bool encontrado = false;
-                            foreach (var x in AccionesSinTomar.OrderBy(o => o.fecha))
-                            {
-                                if (!encontrado)
-                                {
-                                    if (x.obligatorio == true)
-                                    {
-                                        resultado.Add(x);
-                                        encontrado = true;
-                                    }
-                                    else
-                                    {
-                                        resultado.Add(x);
-                                    }
-                                }
-                                else
-                                {
-                                    miRespuesta.code = StatusCodes.Status200OK;
-                                    miRespuesta.data = resultado;
-                                    miRespuesta.mensaje = "exito";
-                                }
-                            }
-                            miRespuesta.code = StatusCodes.Status200OK;
-                            miRespuesta.data = resultado;
-                            miRespuesta.mensaje = "exito";
-                        }
-
-
-                    }
-                    else
-                    {
-                        List<object> resultado = new List<object>();
-                        bool encontrado = false;
-                        foreach (var x in AccionesSinTomar.OrderBy(o => o.fecha))
-                        {
-                            if (!encontrado)
-                            {
-                                if (x.obligatorio == true)
-                                {
-                                    resultado.Add(x);
-                                    encontrado = true;
-                                }
-                                else
-                                {
-                                    resultado.Add(x);
-                                }
-                            }
-                            else
-                            {
-                                miRespuesta.code = StatusCodes.Status200OK;
-                                miRespuesta.data = resultado;
-                                miRespuesta.mensaje = "exito";
-                            }
-                        }
-                        miRespuesta.code = StatusCodes.Status200OK;
-                        miRespuesta.data = resultado;
-                        miRespuesta.mensaje = "exito";
-                    }
-
-                    */
-
-
                 }
                 catch (Exception ex)
                 {
@@ -400,6 +277,36 @@ namespace TecAPI.Controllers
 
             return miRespuesta;
         }
+
+        [HttpGet]
+        [Route("{id}/Sesiones")]
+        [Authorize(Roles = "A, C, J, D")]
+        public Respuesta IndexSesiones(string id)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+                    var result = db.Sesiones.Where(w => w.DepartamentoId == int.Parse(id));
+                    miRespuesta.code = StatusCodes.Status200OK;
+                    miRespuesta.mensaje = "exito";
+                    miRespuesta.data = result.ToList();
+                }
+                catch (Exception ex)
+                {
+                    miRespuesta.code = StatusCodes.Status500InternalServerError;
+                    miRespuesta.mensaje = "error interno";
+                    miRespuesta.data = ex;
+                }
+
+            }
+
+
+
+            return miRespuesta;
+        }
+
 
         /// <summary>
         /// Mostrar todos los grupos pertenecientes
@@ -467,6 +374,7 @@ namespace TecAPI.Controllers
                     var result = db.Canalizaciones.Where(w => w.Personal.DepartamentoId == byte.Parse(id) && w.Estado.ToLower() == "a")
                          .Select(s => new
                          {
+                             estado = s.Estado,
                              descripcion = s.Descripcion,
                              estudiante = new
                              {
@@ -596,10 +504,41 @@ namespace TecAPI.Controllers
         }
 
 
+
+        [HttpPost]
+        [Route("Asesorias")]
+        public Respuesta Store([FromBody] DepartamentosAsesorias departamentoAsesorias)
+        {
+            Respuesta respuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+                    db.DepartamentosAsesorias.Add(departamentoAsesorias);
+                    db.SaveChanges();
+                    respuesta.code = StatusCodes.Status200OK;
+                    respuesta.mensaje = "Se ha creado la relacion con la asesoria";
+
+                }
+                catch (Exception e)
+                {
+                    respuesta.data = e;
+                    respuesta.code = StatusCodes.Status400BadRequest;
+                    respuesta.mensaje = "Error al agregar la relacion con la asesoria";
+                }
+            }
+            return respuesta;
+        }
+
+        /// <summary>
+        /// Mostrar todo el personal de un departamento dado
+        /// </summary>
+        /// <param name="id">identificador del departamento</param>
+        /// <returns>El personal de un departamento</returns>
         [HttpGet]
-        [Route("{id}/Sesiones")]
+        [Route("{id}/Asesorias")]
         [Authorize(Roles = "A, C, J, D")]
-        public Respuesta IndexSesiones(string id, int cant, int pag, string orderBy)
+        public Respuesta IndexAsesorias(string id, int cant, int pag, string orderBy)
         {
             Respuesta miRespuesta = new Respuesta();
 
@@ -607,22 +546,7 @@ namespace TecAPI.Controllers
             {
                 try
                 {
-                    var result = db.Sesiones
-                        .Include( i => i.AccionTutorial)
-                        .Select(s => new
-                        {
-                            fecha = s.Fecha,
-                            accionTutorial = new 
-                                            { 
-                                                id = s.AccionTutorial.Id,
-                                                titulo = s.AccionTutorial.Fecha,
-                                                contenido = s.AccionTutorial.Contenido,
-                                                fecha = s.AccionTutorial.Fecha,
-                                                activo = s.AccionTutorial.Activo
-                                            },
-                            s.DepartamentoId
-                        })
-                        .Where(w => w.DepartamentoId == int.Parse(id));
+                    var result = db.DepartamentosAsesorias.Where(w => w.DepartamentoId == int.Parse(id) || w.Asesoria.General == true);
 
                     if (!String.IsNullOrEmpty(orderBy))
                     {
@@ -663,6 +587,7 @@ namespace TecAPI.Controllers
 
 
         }
+
 
     }
 }

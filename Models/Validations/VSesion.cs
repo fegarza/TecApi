@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,11 +13,9 @@ namespace TecAPI.Models.Tutorias
     {
         sealed class MetaData
         {
-            [NotNull(ErrorMessage = "la fecha no ha sido introducida")]
             [DataType(DataType.Date, ErrorMessage = "la fecha no es valida")]
             [Required(ErrorMessage = "la fecha no ha sido introducida")]
-            [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-            public DateTime? Fecha { get; set; }
+            public DateTime Fecha { get; set; }
             [Existe("departamento", ErrorMessage = "el departamento no existe en el sistema")]
             [Required(ErrorMessage = "el DepartamentoId no ha sido introducido")]
             public byte DepartamentoId { get; set; }
@@ -27,7 +24,4 @@ namespace TecAPI.Models.Tutorias
             public int AccionTutorialId { get; set; }
         }
     }
-  
-
-
 }

@@ -1,8 +1,4 @@
-﻿#define PROD
-#undef PROD
-#define LOCAL
-#undef LOCAL
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
@@ -20,11 +16,15 @@ namespace TecAPI.Models.Tutorias
         }
 
         public virtual DbSet<AccionesTutoriales> AccionesTutoriales { get; set; }
+        public virtual DbSet<Archivos> Archivos { get; set; }
         public virtual DbSet<Areas> Areas { get; set; }
+        public virtual DbSet<AsesoriaHorario> AsesoriaHorario { get; set; }
+        public virtual DbSet<Asesorias> Asesorias { get; set; }
         public virtual DbSet<Atenciones> Atenciones { get; set; }
         public virtual DbSet<Canalizaciones> Canalizaciones { get; set; }
         public virtual DbSet<Carreras> Carreras { get; set; }
         public virtual DbSet<Departamentos> Departamentos { get; set; }
+        public virtual DbSet<DepartamentosAsesorias> DepartamentosAsesorias { get; set; }
         public virtual DbSet<Estudiantes> Estudiantes { get; set; }
         public virtual DbSet<EstudiantesDatos> EstudiantesDatos { get; set; }
         public virtual DbSet<EstudiantesSesiones> EstudiantesSesiones { get; set; }
@@ -41,16 +41,7 @@ namespace TecAPI.Models.Tutorias
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-#if PROD
-                 optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
-#else
-
-#if LOCAL
-                optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; User ID=sa;Password=7271;Trusted_Connection=False");
-#else
-                optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; User ID=pipe;Password=7271;Trusted_Connection=False");
-#endif
-#endif
+                optionsBuilder.UseSqlServer("Server= 192.168.1.75; Database = TUTORIAS; User ID=pipe;Password=7271;Trusted_Connection=False");
             }
         }
 
@@ -61,7 +52,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<AccionesTutoriales>(entity =>
             {
                 entity.HasIndex(e => e.Fecha)
-                    .HasName("UQ__Acciones__B30C8A5EC84ABCEA")
+                    .HasName("UQ__Acciones__B30C8A5E664D528E")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -78,6 +69,12 @@ namespace TecAPI.Models.Tutorias
 
                 entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
 
+                entity.Property(e => e.Tipo)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('G')");
+
                 entity.Property(e => e.Titulo)
                     .IsRequired()
                     .HasMaxLength(70)
@@ -90,6 +87,35 @@ namespace TecAPI.Models.Tutorias
                     .HasConstraintName("FK_AccionTutorial_Personal");
             });
 
+            modelBuilder.Entity<Archivos>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Descripcion)
+                    .HasMaxLength(400)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Fecha)
+                    .HasColumnType("date")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Link)
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Tipo)
+                    .IsRequired()
+                    .HasMaxLength(1)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('G')");
+
+                entity.Property(e => e.Titulo)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Areas>(entity =>
             {
                 entity.Property(e => e.Id)
@@ -98,6 +124,38 @@ namespace TecAPI.Models.Tutorias
 
                 entity.Property(e => e.Correo)
                     .HasMaxLength(70)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Titulo)
+                    .IsRequired()
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<AsesoriaHorario>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.AsesoriaId).HasColumnName("AsesoriaID");
+
+                entity.HasOne(d => d.Asesoria)
+                    .WithMany(p => p.AsesoriaHorario)
+                    .HasForeignKey(d => d.AsesoriaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_AsesoriaHorario_Asesoria");
+            });
+
+            modelBuilder.Entity<Asesorias>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Asesor)
+                    .IsRequired()
+                    .HasMaxLength(60)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Aula)
+                    .HasMaxLength(20)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Titulo)
@@ -168,7 +226,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Carreras>(entity =>
             {
                 entity.HasIndex(e => e.Carcve)
-                    .HasName("UQ__Carreras__5501AA815CC3E365")
+                    .HasName("UQ__Carreras__5501AA8128671C12")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -184,7 +242,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Departamentos>(entity =>
             {
                 entity.HasIndex(e => e.Titulo)
-                    .HasName("UQ__Departam__7B406B5680D568F6")
+                    .HasName("UQ__Departam__7B406B56F0212F37")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -197,14 +255,35 @@ namespace TecAPI.Models.Tutorias
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<DepartamentosAsesorias>(entity =>
+            {
+                entity.HasKey(e => new { e.AsesoriaId, e.DepartamentoId });
+
+                entity.Property(e => e.AsesoriaId).HasColumnName("AsesoriaID");
+
+                entity.Property(e => e.DepartamentoId).HasColumnName("DepartamentoID");
+
+                entity.HasOne(d => d.Asesoria)
+                    .WithMany(p => p.DepartamentosAsesorias)
+                    .HasForeignKey(d => d.AsesoriaId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DepartamentosAsesorias_Asesoria");
+
+                entity.HasOne(d => d.Departamento)
+                    .WithMany(p => p.DepartamentosAsesorias)
+                    .HasForeignKey(d => d.DepartamentoId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_DepartamentosAsesorias_Departamento");
+            });
+
             modelBuilder.Entity<Estudiantes>(entity =>
             {
                 entity.HasIndex(e => e.NumeroDeControl)
-                    .HasName("UQ__Estudian__85382F5954AF33A4")
+                    .HasName("UQ__Estudian__85382F59FDB2C017")
                     .IsUnique();
 
                 entity.HasIndex(e => e.UsuarioId)
-                    .HasName("UQ__Estudian__2B3DE799B4C9CCC8")
+                    .HasName("UQ__Estudian__2B3DE79970F148E5")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -216,6 +295,11 @@ namespace TecAPI.Models.Tutorias
                     .HasMaxLength(1)
                     .IsUnicode(false)
                     .HasDefaultValueSql("('A')");
+
+                entity.Property(e => e.FotoLink)
+                    .HasMaxLength(500)
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('/assets/img/panel/perfil.png')");
 
                 entity.Property(e => e.GrupoId).HasColumnName("GrupoID");
 
@@ -249,7 +333,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<EstudiantesDatos>(entity =>
             {
                 entity.HasIndex(e => e.EstudianteId)
-                    .HasName("UQ__Estudian__6F7683396266899F")
+                    .HasName("UQ__Estudian__6F768339C31D8615")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -453,6 +537,10 @@ namespace TecAPI.Models.Tutorias
                 entity.HasKey(e => new { e.SesionId, e.EstudianteId, e.GrupoId })
                     .HasName("PK_Estudiantes_Sesiones");
 
+                entity.HasIndex(e => new { e.SesionId, e.EstudianteId })
+                    .HasName("UQ_EstudiantesSesiones_Sesion_Estudiante")
+                    .IsUnique();
+
                 entity.Property(e => e.SesionId).HasColumnName("SesionID");
 
                 entity.Property(e => e.EstudianteId).HasColumnName("EstudianteID");
@@ -481,7 +569,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Grupos>(entity =>
             {
                 entity.HasIndex(e => e.PersonalId)
-                    .HasName("UQ__Grupos__28343712C464EC43")
+                    .HasName("UQ__Grupos__283437126D6808ED")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -502,11 +590,11 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Personales>(entity =>
             {
                 entity.HasIndex(e => e.Cve)
-                    .HasName("UQ__Personal__C1FE2DBE88597DA0")
+                    .HasName("UQ__Personal__C1FE2DBE63B36E26")
                     .IsUnique();
 
                 entity.HasIndex(e => e.UsuarioId)
-                    .HasName("UQ__Personal__2B3DE7997CDEEF1D")
+                    .HasName("UQ__Personal__2B3DE799213C2F6C")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");
@@ -606,6 +694,8 @@ namespace TecAPI.Models.Tutorias
             {
                 entity.Property(e => e.Id).HasColumnName("ID");
 
+                entity.Property(e => e.AccionTutorialId).HasColumnName("AccionTutorialID");
+
                 entity.Property(e => e.Descripcion)
                     .IsRequired()
                     .HasMaxLength(300)
@@ -614,6 +704,12 @@ namespace TecAPI.Models.Tutorias
                 entity.Property(e => e.EstudianteId).HasColumnName("EstudianteID");
 
                 entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
+
+                entity.HasOne(d => d.AccionTutorial)
+                    .WithMany(p => p.SesionesIndividuales)
+                    .HasForeignKey(d => d.AccionTutorialId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionesIndividuales_AccionTutorial");
 
                 entity.HasOne(d => d.Estudiante)
                     .WithMany(p => p.SesionesIndividuales)
@@ -631,7 +727,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Titulos>(entity =>
             {
                 entity.HasIndex(e => e.Titulo)
-                    .HasName("UQ__Titulos__7B406B567D301CFF")
+                    .HasName("UQ__Titulos__7B406B5630143F9B")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -647,7 +743,7 @@ namespace TecAPI.Models.Tutorias
             modelBuilder.Entity<Usuarios>(entity =>
             {
                 entity.HasIndex(e => e.Email)
-                    .HasName("UQ__Usuarios__A9D10534584570C7")
+                    .HasName("UQ__Usuarios__A9D1053480126A78")
                     .IsUnique();
 
                 entity.Property(e => e.Id).HasColumnName("ID");

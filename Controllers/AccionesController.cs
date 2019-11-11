@@ -43,7 +43,8 @@ namespace TecAPI.Controllers
                                titulo = s.Titulo,
                                contenido = s.Contenido,
                                fecha = s.Fecha.ToShortDateString(),
-                               obligatorio = s.Obligatorio
+                               obligatorio = s.Obligatorio,
+                               tipo = s.Tipo
                            }
                     );
                     if (!String.IsNullOrEmpty(orderBy))
@@ -190,7 +191,12 @@ namespace TecAPI.Controllers
                                     if(miAccion.Activo != null)
                                     {
                                         result.First().Activo = miAccion.Activo;
-                                        acciones.Add("se ha cambiado la configuracion con exito");
+                                        acciones.Add("se ha cambiado el estado con exito");
+                                    }
+                                    if (!string.IsNullOrEmpty(miAccion.Tipo) )
+                                    {
+                                        result.First().Tipo = miAccion.Tipo;
+                                        acciones.Add("se ha cambiado el tipo con exito");
                                     }
 
                                     db.SaveChanges();
@@ -230,6 +236,30 @@ namespace TecAPI.Controllers
             }
 
             return miRespuesta;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public Respuesta Delete(string id)
+        {
+            Respuesta respuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+                    db.AccionesTutoriales.Remove(db.AccionesTutoriales.Where(w => w.Id == int.Parse(id)).First());
+                    db.SaveChanges();
+                    respuesta.code = StatusCodes.Status200OK;
+                    respuesta.mensaje = "Accion tutorial eliminada con exito";
+                }
+                catch (Exception e)
+                {
+                    respuesta.data = e;
+                    respuesta.code = StatusCodes.Status400BadRequest;
+                    respuesta.mensaje = "Error al eliminar la canalizacion";
+                }
+            }
+            return respuesta;
         }
     }
 }

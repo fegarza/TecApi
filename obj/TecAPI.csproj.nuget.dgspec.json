@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj": {}
+    "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\TecAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj": {
+    "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\TecAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\TecAPI.csproj",
         "projectName": "TecAPI",
-        "projectPath": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\TecAPI.csproj",
-        "packagesPath": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\Pictures\\TecAPI\\TecAPI\\obj\\",
+        "projectPath": "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\TecAPI.csproj",
+        "packagesPath": "C:\\Users\\Felipe\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Administrador.WIN-VS1FUF63QFG\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Felipe\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -82,7 +82,7 @@
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
-              "version": "[2.2.3, )"
+              "version": "[2.2.4, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -94,16 +94,10 @@
             }
           },
           "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48"
+            "net461"
           ],
           "assetTargetFallback": true,
-          "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+          "warn": true
         }
       }
     }

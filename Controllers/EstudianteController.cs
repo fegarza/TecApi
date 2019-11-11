@@ -35,7 +35,16 @@ namespace TecAPI.Controllers
             }
             return creditos;
         }
-
+        public static List<Creditos> MostrarCreditos(string _numeroControl) 
+        {
+            List<Creditos> creditos = new List<Creditos>();
+            using (EscolaresContext db2 = new EscolaresContext())
+            {
+                creditos = db2.Creditos.Include(i => i.Actividad).Where(r => r.NumeroDeControl == _numeroControl).ToList();
+            }
+            return creditos;
+        }
+       
         /// <summary>
         /// Mostrar todos los estudiantes
         /// </summary>
@@ -50,6 +59,7 @@ namespace TecAPI.Controllers
             Respuesta miRespuesta = new Respuesta();
             try
             {
+                
                 using (TUTORIASContext db = new TUTORIASContext())
                 {
                     var result = db.Estudiantes
@@ -81,10 +91,13 @@ namespace TecAPI.Controllers
                                 }
                             },
                             numeroDeControl = s.NumeroDeControl,
-                            sesiones = (s.EstudiantesSesiones.Count() + s.SesionesIniciales),
+                            sesiones = s.EstudiantesSesiones.Count(),
+                            sesionesIniciales = s.SesionesIniciales,
                             canalizaciones = s.Canalizaciones.Count(),
-                            creditos = IndexCreditos(s.NumeroDeControl),
-                            semestre = s.Semestre
+                            cantidadDeCreditos = IndexCreditos(s.NumeroDeControl),
+                            semestre = s.Semestre,
+                            FotoLink = s.FotoLink,
+                            estado = s.Estado
 
                         });
                     if (!String.IsNullOrEmpty(orderBy))
@@ -137,54 +150,144 @@ namespace TecAPI.Controllers
             {
                 using (TUTORIASContext db = new TUTORIASContext())
                 {
-                    int creditos = 0;
+                    List<Creditos> creditos;
                     using (EscolaresContext db2 = new EscolaresContext())
                     {
-                        creditos = db2.Creditos.Where(r => r.NumeroDeControl == numeroDeControl).Count();
+                        creditos = db2.Creditos.Include(i => i.Actividad).Where(r => r.NumeroDeControl == numeroDeControl).ToList();
                     }
 
                     var result = db.Estudiantes
-                        .Include(i => i.Grupo)
-                        .Include(i => i.Grupo.Personal)
-                        .Include(i => i.Usuario)
-                        .Select(s => new
-                        {
-                            id = s.Id,
-                            usuario = new
+                            .Include(i => i.Grupo)
+                            .Include(i => i.Grupo.Personal)
+                            .Include(i => i.Usuario)
+                            .Select(s => new
                             {
-                                nombre = s.Usuario.Nombre,
-                                apellidoMaterno = s.Usuario.ApellidoMaterno,
-                                apellidoPaterno = s.Usuario.ApellidoPaterno,
-                                nombreCompleto = s.Usuario.NombreCompleto,
-                                email = s.Usuario.Email,
-                                tipo = "E",
-                                genero = s.Usuario.Genero
-                            },
-                            grupo = new
-                            {
-                                id = s.GrupoId,
-                                salon = s.Grupo.Salon,
-                                personal = new
+                                id = s.Id,
+                                usuario = new
                                 {
-                                    id = (s.Grupo.Personal != null ? s.Grupo.PersonalId : 0),
-                                    departamentoId = (s.Grupo.Personal != null ? s.Grupo.Personal.DepartamentoId : 0),
-                                    usuario = new
+                                    nombre = s.Usuario.Nombre,
+                                    apellidoMaterno = s.Usuario.ApellidoMaterno,
+                                    apellidoPaterno = s.Usuario.ApellidoPaterno,
+                                    nombreCompleto = s.Usuario.NombreCompleto,
+                                    email = s.Usuario.Email,
+                                    tipo = "E",
+                                    genero = s.Usuario.Genero
+                                },
+                                grupo = new
+                                {
+                                    id = s.GrupoId,
+                                    salon = s.Grupo.Salon,
+                                    personal = new
                                     {
-                                        nombreCompleto = s.Grupo.Personal.Usuario.NombreCompleto
+                                        id = (s.Grupo.Personal != null ? s.Grupo.PersonalId : 0),
+                                        departamentoId = (s.Grupo.Personal != null ? s.Grupo.Personal.DepartamentoId : 0),
+                                        usuario = new
+                                        {
+                                            nombreCompleto = s.Grupo.Personal.Usuario.NombreCompleto
+                                        }
                                     }
-                                }
-                            },
-                            numeroDeControl = s.NumeroDeControl,
-                            sesiones = (s.EstudiantesSesiones.Count() + s.SesionesIniciales),
-                            canalizaciones = s.Canalizaciones.Count(),
-                            creditos = creditos,
-                            semestre = s.Semestre
-
-                        }).Where(r => r.numeroDeControl == numeroDeControl);
+                                },
+                                numeroDeControl = s.NumeroDeControl,
+                                sesiones = s.EstudiantesSesiones.Count(),
+                                sesionesIniciales = s.SesionesIniciales,
+                                SesionesIndividuales = s.SesionesIndividuales.Count(),
+                                canalizaciones = s.Canalizaciones.Count(),
+                                cantidadDeCreditos = creditos.Count(),
+                                creditos = creditos,
+                                semestre = s.Semestre,
+                                FotoLink = s.FotoLink,
+                                estado = s.Estado
+                            }).Where(r => r.numeroDeControl == numeroDeControl);
 
                     if (result.Count() > 0)
                     {
                         miRespuesta.data = result.First();
+                        miRespuesta.code = StatusCodes.Status200OK;
+                    }
+                    else
+                    {
+                        miRespuesta.mensaje = "no existe un estudiante con los datos solicitados";
+                        miRespuesta.code = StatusCodes.Status500InternalServerError;
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                miRespuesta.mensaje = "error interno";
+                miRespuesta.code = StatusCodes.Status500InternalServerError;
+                miRespuesta.data = ex;
+            }
+            return miRespuesta;
+
+        }
+
+
+        /// <summary>
+        
+        [Route("{numeroDeControl}/datos")]
+        [HttpGet]
+        [AllowAnonymous]
+        public Respuesta ShowDatos(string numeroDeControl)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            try
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+
+
+                    var result = db.EstudiantesDatos.Include(i => i.Estudiante).Where(w => w.Estudiante.NumeroDeControl == numeroDeControl);
+                             
+
+                    if (result.Count() > 0)
+                    {
+                        miRespuesta.data = result.First();
+                        miRespuesta.code = StatusCodes.Status200OK;
+                    }
+                    else
+                    {
+                        miRespuesta.mensaje = "no existe un estudiante con los datos solicitados";
+                        miRespuesta.code = StatusCodes.Status500InternalServerError;
+
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                miRespuesta.mensaje = "error interno";
+                miRespuesta.code = StatusCodes.Status500InternalServerError;
+                miRespuesta.data = ex;
+            }
+            return miRespuesta;
+
+        }
+
+
+        [Route("{numeroDeControl}/Canalizaciones")]
+        [HttpGet]
+        [AllowAnonymous]
+        public Respuesta ShowCanalizaciones(string numeroDeControl)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            try
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+
+
+                    var result = db.Canalizaciones
+                        .Include(i => i.Atencion)
+                        .Include(i => i.Personal)
+                        .Include(i => i.Personal.Usuario)
+                        .Where(w => w.Estudiante.NumeroDeControl == numeroDeControl);
+
+
+                    if (result.Count() > 0)
+                    {
+                        miRespuesta.data = result.ToList();
                         miRespuesta.code = StatusCodes.Status200OK;
                     }
                     else
@@ -264,7 +367,11 @@ namespace TecAPI.Controllers
                                         result.First().SesionesIniciales = miEstudiante.SesionesIniciales;
                                         acciones.Add("se han establecido las sesiones iniciales con exito");
                                     }
-
+                                    if (!String.IsNullOrEmpty(miEstudiante.FotoLink))
+                                    {
+                                        result.First().FotoLink = miEstudiante.FotoLink;
+                                        acciones.Add("se ha cambiado la foto de perfil con exito");
+                                    }
                                     db.SaveChanges();
                                     miRespuesta.mensaje = "exito";
                                     miRespuesta.data = new { acciones, errores };
@@ -542,6 +649,99 @@ namespace TecAPI.Controllers
                 }
             }
             */
+        }
+
+
+
+
+
+        [Route("datos")]
+        [HttpPut]
+        public Respuesta Update([FromBody] EstudiantesDatos datos)
+        {
+            Respuesta respuesta = new Respuesta();
+            if (datos.EstudianteId != 0)
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    try
+                    {
+                        var result = db.EstudiantesDatos.Where(w => w.EstudianteId== datos.EstudianteId).First();
+                        result.BecadoPor = datos.BecadoPor = datos.BecadoPor;
+                        result.CalleDomicilio = datos.CalleDomicilio;
+                        result.CependenciaEconomica = datos.CependenciaEconomica;
+                        result.CiudadNacimiento = datos.CiudadNacimiento;
+                        result.CodigoPostalDomicilio = datos.CodigoPostalDomicilio;
+                        result.ColoniaDomicilio = datos.ColoniaDomicilio;
+                        result.DificultadDormir = datos.DificultadDormir;
+                        result.DoloresCabezaVomito = datos.DoloresCabezaVomito;
+                        result.DoloresVientre = datos.DoloresVientre;
+                        result.Empresa = datos.Empresa;
+                        result.EstadoCivil = datos.EstadoCivil;
+                        result.EstadoNacimiento = datos.EstadoNacimiento;
+                        result.EstudiosMadre = datos.EstudiosMadre;
+                        result.EstudiosPadre = datos.EstudiosPadre;
+                        result.FatigaAgotamiento = datos.FatigaAgotamiento;
+                        result.FechaModificacion = datos.FechaModificacion;
+                        result.FechaNacimiento = datos.FechaNacimiento;
+                        result.Horario = datos.Horario;
+                        result.Incontinencia = datos.Incontinencia;
+                        result.LugarTrabajoFamiliar = datos.LugarTrabajoFamiliar;
+                        result.LugarTrabajoMadre = datos.LugarTrabajoMadre;
+                        result.LugarTrabajoPadre = datos.LugarTrabajoPadre;
+                        result.MadreVive = datos.MadreVive;
+                        result.ManosPiesHinchados = datos.ManosPiesHinchados;
+                        result.MiedosIntensos = datos.MiedosIntensos;
+                        result.Nss = datos.Nss;
+                        result.NumDomicilio = datos.NumDomicilio;
+                        result.NumeroHijos = datos.NumeroHijos;
+                        result.ObservacionesHigiene = datos.ObservacionesHigiene;
+                        result.PadreVive = datos.PadreVive;
+                        result.PerdidaEquilibrio = datos.PerdidaEquilibrio;
+                        result.PerdidaVistaOido = datos.PerdidaVistaOido;
+                        result.PesadillasTerroresNocturnos = datos.PesadillasTerroresNocturnos;
+                        result.PesadillasTerroresNocturnosAque = datos.PesadillasTerroresNocturnosAque;
+                        result.PrescripcionLenguaje = datos.PrescripcionLenguaje;
+                        result.PrescripcionMotriz = datos.PrescripcionMotriz;
+                        result.PrescripcionOido = datos.PrescripcionOido;
+                        result.PrescripcionSistemaCirculatorio = datos.PrescripcionSistemaCirculatorio;
+                        result.PrescripcionSistemaDigestivo = datos.PrescripcionSistemaDigestivo;
+                        result.PrescripcionSistemaNervioso = datos.PrescripcionSistemaNervioso;
+                        result.PrescripcionSistemaOseo = datos.PrescripcionSistemaOseo;
+                        result.PrescripcionSistemaOtro = datos.PrescripcionSistemaOtro;
+                        result.PrescripcionSistemaRespiratorio = datos.PrescripcionSistemaRespiratorio;
+                        result.PrescripcionVista = datos.PrescripcionVista;
+                        result.Tartamudeos = datos.Tartamudeos;
+                        result.TelefonoDomicilio = datos.TelefonoDomicilio;
+                        result.TelefonoMovil = datos.TelefonoMovil;
+                        result.TelefonoTrabajoFamiliar = datos.TelefonoTrabajoFamiliar;
+                        result.TelefonoTrabajoMadre = datos.TelefonoTrabajoMadre;
+                        result.TelefonoTrabajoPadre = datos.TelefonoTrabajoPadre;
+                        result.TieneBeca = datos.TieneBeca;
+                        result.Trabaja = datos.Trabaja;
+                        result.TratamientoPsicologicoPsiquiatrico = datos.TratamientoPsicologicoPsiquiatrico;
+                        result.TratamientoPsicologicoPsiquiatricoExplicacion = datos.TratamientoPsicologicoPsiquiatricoExplicacion;
+
+                        db.SaveChanges();
+                        respuesta.code = StatusCodes.Status200OK;
+                        respuesta.mensaje = "Archivo editado con exito";
+                    }
+                    catch (Exception e)
+                    {
+                        respuesta.data = e;
+                        respuesta.code = StatusCodes.Status400BadRequest;
+                        respuesta.mensaje = "Error al editar el archivo";
+                    }
+                }
+            }
+            else
+            {
+                respuesta.code = StatusCodes.Status400BadRequest;
+                respuesta.mensaje = "No existe tal archivo";
+            }
+
+
+            return respuesta;
         }
 
     }

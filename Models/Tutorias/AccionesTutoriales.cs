@@ -8,6 +8,7 @@ namespace TecAPI.Models.Tutorias
         public AccionesTutoriales()
         {
             Sesiones = new HashSet<Sesiones>();
+            SesionesIndividuales = new HashSet<SesionesIndividuales>();
         }
 
         public int Id { get; set; }
@@ -17,8 +18,10 @@ namespace TecAPI.Models.Tutorias
         public DateTime Fecha { get; set; }
         public bool Obligatorio { get; set; }
         public bool? Activo { get; set; }
+        public string Tipo { get; set; }
 
         public virtual Personales Personal { get; set; }
         public virtual ICollection<Sesiones> Sesiones { get; set; }
+        public virtual ICollection<SesionesIndividuales> SesionesIndividuales { get; set; }
     }
 }

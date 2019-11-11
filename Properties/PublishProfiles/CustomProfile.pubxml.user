@@ -23,10 +23,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/02/2019 19:52:30</publishTime>
     </File>
     <File Include="Microsoft.CodeAnalysis.CSharp.Workspaces.dll">
-      <publishTime>09/14/2019 16:33:11</publishTime>
+      <publishTime>06/10/2019 13:35:40</publishTime>
     </File>
     <File Include="Microsoft.CodeAnalysis.Workspaces.dll">
-      <publishTime>09/14/2019 16:33:19</publishTime>
+      <publishTime>06/10/2019 13:34:38</publishTime>
     </File>
     <File Include="Microsoft.EntityFrameworkCore.Abstractions.dll">
       <publishTime>06/18/2019 21:21:18</publishTime>
@@ -44,7 +44,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/18/2019 21:21:54</publishTime>
     </File>
     <File Include="Microsoft.Extensions.PlatformAbstractions.dll">
-      <publishTime>09/14/2019 16:33:00</publishTime>
+      <publishTime>08/14/2019 18:14:52</publishTime>
     </File>
     <File Include="Microsoft.OpenApi.dll">
       <publishTime>10/24/2018 18:48:08</publishTime>
@@ -71,25 +71,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/02/2019 19:52:04</publishTime>
     </File>
     <File Include="NuGet.Frameworks.dll">
-      <publishTime>09/14/2019 16:33:26</publishTime>
+      <publishTime>06/10/2019 13:34:54</publishTime>
     </File>
     <File Include="Remotion.Linq.dll">
-      <publishTime>09/14/2019 16:33:32</publishTime>
+      <publishTime>08/14/2019 18:14:38</publishTime>
     </File>
     <File Include="runtimes/unix/lib/netcoreapp2.1/System.Data.SqlClient.dll">
       <publishTime>04/17/2019 18:07:28</publishTime>
     </File>
     <File Include="runtimes/win-arm64/native/sni.dll">
-      <publishTime>09/14/2019 16:33:36</publishTime>
+      <publishTime>08/14/2019 18:14:51</publishTime>
     </File>
     <File Include="runtimes/win-x64/native/sni.dll">
-      <publishTime>09/14/2019 16:33:37</publishTime>
+      <publishTime>08/14/2019 18:14:51</publishTime>
     </File>
     <File Include="runtimes/win-x86/native/sni.dll">
-      <publishTime>09/14/2019 16:33:37</publishTime>
+      <publishTime>08/14/2019 18:14:52</publishTime>
     </File>
     <File Include="runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.dll">
-      <publishTime>09/14/2019 16:33:03</publishTime>
+      <publishTime>08/14/2019 18:14:58</publishTime>
     </File>
     <File Include="runtimes/win/lib/netcoreapp2.1/System.Data.SqlClient.dll">
       <publishTime>04/17/2019 18:07:28</publishTime>
@@ -107,19 +107,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/22/2019 20:14:24</publishTime>
     </File>
     <File Include="System.Composition.AttributedModel.dll">
-      <publishTime>09/14/2019 16:33:32</publishTime>
+      <publishTime>06/10/2019 13:35:08</publishTime>
     </File>
     <File Include="System.Composition.Convention.dll">
-      <publishTime>09/14/2019 16:33:32</publishTime>
+      <publishTime>06/10/2019 13:35:10</publishTime>
     </File>
     <File Include="System.Composition.Hosting.dll">
-      <publishTime>09/14/2019 16:33:36</publishTime>
+      <publishTime>06/10/2019 13:35:15</publishTime>
     </File>
     <File Include="System.Composition.Runtime.dll">
-      <publishTime>09/14/2019 16:33:36</publishTime>
+      <publishTime>06/10/2019 13:35:30</publishTime>
     </File>
     <File Include="System.Composition.TypedParts.dll">
-      <publishTime>09/14/2019 16:33:36</publishTime>
+      <publishTime>06/10/2019 13:35:30</publishTime>
     </File>
     <File Include="System.Data.SqlClient.dll">
       <publishTime>04/17/2019 18:07:28</publishTime>
@@ -128,25 +128,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/11/2018 13:48:42</publishTime>
     </File>
     <File Include="System.Text.Encoding.CodePages.dll">
-      <publishTime>09/14/2019 16:33:03</publishTime>
+      <publishTime>08/14/2019 18:14:58</publishTime>
     </File>
     <File Include="TecAPI.deps.json">
-      <publishTime>10/29/2019 19:13:11</publishTime>
+      <publishTime>10/28/2019 19:09:00</publishTime>
     </File>
     <File Include="TecAPI.dll">
-      <publishTime>10/29/2019 19:12:07</publishTime>
+      <publishTime>10/28/2019 19:08:53</publishTime>
     </File>
     <File Include="TecAPI.pdb">
-      <publishTime>10/29/2019 19:12:07</publishTime>
+      <publishTime>10/28/2019 19:08:53</publishTime>
     </File>
     <File Include="TecAPI.runtimeconfig.json">
-      <publishTime>10/28/2019 17:30:49</publishTime>
+      <publishTime>10/28/2019 19:09:01</publishTime>
     </File>
     <File Include="TecApi.xml">
-      <publishTime>10/29/2019 19:12:07</publishTime>
+      <publishTime>10/24/2019 08:41:29</publishTime>
     </File>
     <File Include="web.config">
-      <publishTime>10/29/2019 19:13:11</publishTime>
+      <publishTime>10/28/2019 19:09:01</publishTime>
     </File>
   </ItemGroup>
 </Project>

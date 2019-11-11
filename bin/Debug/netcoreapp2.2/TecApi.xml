@@ -25,13 +25,6 @@
             <param name="accion">el objeto en formato JSON</param>
             <returns>un modelo de respuesta</returns>
         </member>
-        <member name="M:TecAPI.Controllers.AccionesController.Update(TecAPI.Models.Tutorias.AccionesTutoriales)">
-            <summary>
-            Actualizar una accion tutorial
-            </summary>
-            <param name="miAccion">Objeto a actualizar</param>
-            <returns>un estado de la operacion</returns>
-        </member>
         <member name="T:TecAPI.Controllers.AtencionesController">
             <summary>
             Todo lo relacionado con las atenciones
@@ -81,13 +74,6 @@
             <param name="orderBy">orden a implementar</param>
             <returns>un modelo de respuesta</returns>
         </member>
-        <member name="M:TecAPI.Controllers.DepartamentosController.Show(System.String)">
-            <summary>
-            Mostrar un departamento en especifico
-            </summary>
-            <param name="id">id </param>
-            <returns>un departamento</returns>
-        </member>
         <member name="M:TecAPI.Controllers.DepartamentosController.IndexAcciones(System.String)">
             <summary>
             Mostrar las acciones tutoriales pertenecientes
@@ -108,13 +94,6 @@
             </summary>
             <param name="id">identificador del departamento</param>
             <returns></returns>
-        </member>
-        <member name="M:TecAPI.Controllers.DepartamentosController.IndexPersonales(System.String,System.Int32,System.Int32,System.String)">
-            <summary>
-            Mostrar todo el personal de un departamento dado
-            </summary>
-            <param name="id">identificador del departamento</param>
-            <returns>El personal de un departamento</returns>
         </member>
         <member name="T:TecAPI.Controllers.EstudiantesController">
             <summary>

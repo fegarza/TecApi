@@ -90,14 +90,13 @@ namespace TecAPI.Controllers
         /// <param name="sesion">El objeto sesion en formato JSON</param>
         /// <returns>Un modelo de respuesta</returns>
         [HttpPost]
-        public Respuesta Store([FromBody]Sesiones sesion)
+        public Respuesta Store(Sesiones sesion)
         {
             Respuesta miRespuesta = new Respuesta();
-           
+
             if (!ModelState.IsValid)
             {
                 List<string> errores = new List<string>();
-               
                 foreach (Microsoft.AspNetCore.Mvc.ModelBinding.ModelError e in ModelState.Values.SelectMany(modelState => modelState.Errors).ToList())
                 {
                     errores.Add(e.ErrorMessage);
@@ -106,11 +105,6 @@ namespace TecAPI.Controllers
 
                 miRespuesta.mensaje = "datos invalidos";
                 miRespuesta.code = StatusCodes.Status400BadRequest;
-
-
-                
-
-
             }
             else
             {

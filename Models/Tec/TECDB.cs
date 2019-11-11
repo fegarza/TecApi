@@ -28,7 +28,7 @@ namespace TecAPI.Models.Tec
         public static string userName = "sa";
         public static string password = "7271";
 #else
-        public static string host = "localhost";
+        public static string host = "192.168.1.75";
         public static string dataBase = "TEC";
         public static string userName = "pipe";
         public static string password = "7271";

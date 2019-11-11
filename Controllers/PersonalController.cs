@@ -48,7 +48,6 @@ namespace TecAPI.Controllers
                                id = s.Id,
                                usuario = new
                                {
-                                   id= s.Usuario.Id,
                                    nombreCompleto = s.Usuario.NombreCompleto,
                                    nombre = s.Usuario.Nombre,
                                    apellidoMaterno = s.Usuario.ApellidoMaterno,

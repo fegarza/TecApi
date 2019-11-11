@@ -213,7 +213,8 @@ namespace TecAPI.Controllers
                                 personal = new
                                 {
                                     id = s.Personales.Id,
-                                    cargo = s.Personales.Cargo
+                                    cargo = s.Personales.Cargo,
+                                    departamentoId = s.Personales.DepartamentoId
                                 }
                             }).First();
                             
@@ -362,79 +363,5 @@ namespace TecAPI.Controllers
             }
             return respuesta;
         }
-
-        [AllowAnonymous]
-        [HttpPut]
-        public Respuesta Modificar([FromBody] Usuarios miUsuario)
-        {
-            Respuesta miRespuesta = new Respuesta();
-
-            if (miUsuario != null)
-            {
-                if (!String.IsNullOrEmpty(miUsuario.Id.ToString()))
-                {
-                    try
-                    {
-                        using (TUTORIASContext db = new TUTORIASContext())
-                        {
-                            var result = db.Usuarios.Where(r => r.Id == miUsuario.Id);
-                            if (result.Count() > 0)
-                            {
-                                try
-                                {
-                                    List<string> acciones = new List<string>();
-                                    List<string> errores = new List<string>();
-
-                                    if (!String.IsNullOrEmpty(miUsuario.Email))
-                                    {
-                                        result.First().Email = miUsuario.Email;
-                                        acciones.Add("se ha cambiado el email con exito");
-                                    }
-                                    if (!String.IsNullOrEmpty(miUsuario.Clave))
-                                    {
-                                        result.First().Clave = miUsuario.Clave;
-                                        acciones.Add("se ha cambiado la clave con exito");
-                                    }
-
-
-                                    db.SaveChanges();
-                                    miRespuesta.mensaje = "exito";
-                                    miRespuesta.data = new { acciones, errores };
-                                    miRespuesta.code = StatusCodes.Status200OK;
-                                }
-                                catch
-                                {
-                                    miRespuesta.mensaje = "error al establecer datos al usuario";
-                                    miRespuesta.code = StatusCodes.Status400BadRequest;
-                                }
-                            }
-                            else
-                            {
-                                miRespuesta.mensaje = "no existe un usuario con ese id";
-                                miRespuesta.code = 500;
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        miRespuesta.mensaje = "error en el sistema";
-                        miRespuesta.code = 500;
-                    }
-                }
-                else
-                {
-                    miRespuesta.code = StatusCodes.Status400BadRequest;
-                    miRespuesta.mensaje = "no se ha dado el id del usuario";
-                }
-            }
-            else
-            {
-                miRespuesta.code = StatusCodes.Status400BadRequest;
-                miRespuesta.mensaje = "los datos no son enviados no son correctos";
-            }
-
-            return miRespuesta;
-        }
-
     }
 }

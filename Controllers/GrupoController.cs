@@ -69,9 +69,12 @@ namespace TecAPI.Controllers
                                                   },
                                                   numeroDeControl = v.NumeroDeControl,
                                                   sesiones = v.EstudiantesSesiones.Count(),
+                                                  sesionesIniciales = v.SesionesIniciales,
                                                   canalizaciones = v.Canalizaciones.Count(),
-                                                  creditos = EstudiantesController.IndexCreditos(v.NumeroDeControl),
-                                                  semeste = v.Semestre
+                                                  cantidadDeCreditos = EstudiantesController.IndexCreditos(v.NumeroDeControl),
+                                                  semestre = v.Semestre,
+                                                  FotoLink = v.FotoLink,
+                                                  estado = v.Estado
                                               }).ToList()
                            }
                             );
@@ -113,6 +116,53 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
+
+        [Route("{id}/Canalizaciones")]
+        [HttpGet]
+        public Respuesta ShowCanalizaciones(string id)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            if (id != null)
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    try
+                    {
+                        int idx = db.Grupos.Where(w => w.Id == int.Parse(id)).First().PersonalId;
+                        var result = db.Canalizaciones.Include(i => i.Atencion).Include(i =>  i.Personal.Usuario).Include(i => i.Estudiante).Include(i => i.Estudiante.Usuario).Where(w => w.PersonalId == idx).OrderBy(o => o.Fecha);
+
+                        if (result.Count() > 0)
+                        {
+                            miRespuesta.code = StatusCodes.Status200OK;
+                            miRespuesta.data = result.ToList();
+                        }
+                        else
+                        {
+                            miRespuesta.code = StatusCodes.Status404NotFound;
+                            miRespuesta.mensaje = "no existe ningun grupo con dicho id";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        miRespuesta.code = StatusCodes.Status500InternalServerError;
+                        miRespuesta.mensaje = "error interno";
+                    }
+
+                }
+            }
+            else
+            {
+                miRespuesta.code = StatusCodes.Status409Conflict;
+                miRespuesta.mensaje = "no se ha dado el id";
+            }
+
+
+
+            return miRespuesta;
+        }
+
+
+
         /// <summary>
         /// Mostrar un grupo en especifico
         /// </summary>
@@ -141,7 +191,7 @@ namespace TecAPI.Controllers
                                personal = new
                                {
                                    id = s.Personal.Id,
-                                   departamento = s.Personal.Departamento.Titulo,
+                                   departamento = new { titulo = s.Personal.Departamento.Titulo },
                                    usuario = new {
                                        nombreCompleto = s.Personal.Usuario.NombreCompleto
                                    }
@@ -160,9 +210,12 @@ namespace TecAPI.Controllers
                                                   },
                                                   numeroDeControl = v.NumeroDeControl,
                                                   sesiones = v.EstudiantesSesiones.Count(),
+                                                  sesionesIniciales = v.SesionesIniciales,
                                                   canalizaciones = v.Canalizaciones.Count(),
-                                                  creditos = EstudiantesController.IndexCreditos(v.NumeroDeControl),
-                                                  semeste = v.Semestre,
+                                                  cantidadDeCreditos = EstudiantesController.IndexCreditos(v.NumeroDeControl),
+                                                  semestre = v.Semestre,
+                                                  FotoLink = v.FotoLink,
+                                                  estado = v.Estado
                                               }).ToList()
                            }
                             );
@@ -258,7 +311,7 @@ namespace TecAPI.Controllers
                     try
                     {
                         var personal = db.Grupos.Include(i => i.Personal).Where(w => w.Id == int.Parse(id)).First().Personal;
-                        var result = db.Sesiones.Where(w => w.DepartamentoId == personal.DepartamentoId)
+                        var result = db.Sesiones.OrderByDescending(o => o.Fecha).Where(w => w.DepartamentoId == personal.DepartamentoId)
                             .Select(s => new
                             {
                                 id = s.Id,

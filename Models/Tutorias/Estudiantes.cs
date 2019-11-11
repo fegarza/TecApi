@@ -20,6 +20,7 @@ namespace TecAPI.Models.Tutorias
         public byte SesionesIniciales { get; set; }
         public int? Semestre { get; set; }
         public string Estado { get; set; }
+        public string FotoLink { get; set; }
 
         public virtual Carreras Carrera { get; set; }
         public virtual Grupos Grupo { get; set; }

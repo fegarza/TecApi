@@ -150,5 +150,67 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
+
+        [HttpPut]
+        public Respuesta Update([FromBody] Canalizaciones canalizacion)
+        {
+            Respuesta respuesta = new Respuesta();
+            if (canalizacion.Id != 0)
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    try
+                    {
+                        var result = db.Canalizaciones.Where(w => w.Id == canalizacion.Id);
+                        result.First().Descripcion = canalizacion.Descripcion;
+                        result.First().Fecha = canalizacion.Fecha;
+                        result.First().Estado = canalizacion.Estado;
+                        db.SaveChanges();
+                        respuesta.code = StatusCodes.Status200OK;
+                        respuesta.mensaje = "Archivo editado con exito";
+                    }
+                    catch (Exception e)
+                    {
+                        respuesta.data = e;
+                        respuesta.code = StatusCodes.Status400BadRequest;
+                        respuesta.mensaje = "Error al editar el archivo";
+                    }
+                }
+            }
+            else
+            {
+                respuesta.code = StatusCodes.Status400BadRequest;
+                respuesta.mensaje = "No existe tal archivo";
+            }
+
+
+            return respuesta;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public Respuesta Delete(string id)
+        {
+            Respuesta respuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+                    db.Canalizaciones.Remove(db.Canalizaciones.Where(w => w.Id == int.Parse(id)).First());
+                    db.SaveChanges();
+                    respuesta.code = StatusCodes.Status200OK;
+                    respuesta.mensaje = "Canalizacion eliminada con exito";
+                }
+                catch (Exception e)
+                {
+                    respuesta.data = e;
+                    respuesta.code = StatusCodes.Status400BadRequest;
+                    respuesta.mensaje = "Error al eliminar la canalizacion";
+                }
+            }
+            return respuesta;
+        }
+
+
     }
 }

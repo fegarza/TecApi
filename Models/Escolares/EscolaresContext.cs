@@ -45,7 +45,7 @@ namespace TecAPI.Models.Escolares
 #if LOCAL
                 optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=sa;Password=7271;Trusted_Connection=False");
 #else
-                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=pipe;Password=7271;Trusted_Connection=False");
+                optionsBuilder.UseSqlServer("Server= 192.168.1.75; Database = ESCOLARES; User ID=pipe;Password=7271;Trusted_Connection=False");
 #endif
 #endif
             }

@@ -23,6 +23,7 @@ namespace TecAPI.Controllers
         /// <param name="orderBy">orden a implementar</param>
         /// <returns>un modelo de respuesta</returns>
         [HttpGet]
+        [AllowAnonymous]
         public Respuesta Index(int cant, int pag, string orderBy)
         {
             Respuesta miRespuesta = new Respuesta();
@@ -35,7 +36,7 @@ namespace TecAPI.Controllers
                       s.Link,
                       s.Titulo,
                       s.Fecha,
-                      s.Descripcion
+                         s.Descripcion
                     });
                    
 

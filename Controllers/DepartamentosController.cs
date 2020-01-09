@@ -146,8 +146,8 @@ namespace TecAPI.Controllers
                     var AccionesTomadas = db.Sesiones
                         .Where(s => s.DepartamentoId == int.Parse(id))
                         .Select(s => s.AccionTutorialId);
-
-                    if(AccionesTomadas.Count() > 0)
+                    
+                    if (AccionesTomadas.Count() > 0)
                     {
                         //La ultima obligatoria que ha tenido 
                         var obligatorias = db.Sesiones
@@ -160,13 +160,12 @@ namespace TecAPI.Controllers
                             if (primeraObligatoria.Count() > 0)
                             {
                                 miRespuesta.data = db.AccionesTutoriales
-                                    .Where(w => w.Tipo == "G" && w.Fecha <= primeraObligatoria.First()
-                                    .Fecha && !AccionesTomadas.Contains(w.Id)) 
+                                    .Where(w => w.Activo == true && w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha && !AccionesTomadas.Contains(w.Id)) 
                                     .Select(s=>
                                     new {
                                         id = s.Id,
                                         titulo = s.Titulo,
-                                        fecha = s.Fecha.ToShortDateString(),
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
                                         obligatorio = s.Obligatorio,
                                         contenido = s.Contenido
                                     })
@@ -177,12 +176,12 @@ namespace TecAPI.Controllers
                             else
                             {
                                 miRespuesta.data = db.AccionesTutoriales
-                                    .Where(w => w.Tipo == "G" && !AccionesTomadas.Contains(w.Id) && w.Fecha > obligatorias.Last().Fecha)
+                                    .Where(w => w.Activo == true && w.Tipo == "G" && !AccionesTomadas.Contains(w.Id) && w.Fecha > obligatorias.Last().Fecha)
                                     .Select(s =>
                                     new {
                                         id = s.Id,
                                         titulo = s.Titulo,
-                                        fecha = s.Fecha.ToShortDateString(),
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
                                         obligatorio = s.Obligatorio,
                                         contenido = s.Contenido
                                     })
@@ -197,12 +196,12 @@ namespace TecAPI.Controllers
                             var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
                             if (primeraObligatoria.Count() > 0)
                             {
-                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha)
+                                miRespuesta.data = db.AccionesTutoriales.Where(w =>w.Activo == true && w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha && !AccionesTomadas.Contains(w.Id))
                                     .Select(s =>
                                     new {
                                         id = s.Id,
                                         titulo = s.Titulo,
-                                        fecha = s.Fecha.ToShortDateString(),
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
                                         obligatorio = s.Obligatorio,
                                         contenido = s.Contenido
                                     })
@@ -212,11 +211,12 @@ namespace TecAPI.Controllers
                             }
                             else
                             {
-                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G").Select(s=>
+                                
+                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "G" && !AccionesTomadas.Contains(w.Id)).Select(s=>
                                     new {
                                         id = s.Id,
                                         titulo = s.Titulo,
-                                        fecha = s.Fecha.ToShortDateString(),
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
                                         obligatorio = s.Obligatorio,
                                         contenido = s.Contenido
                                     })
@@ -232,12 +232,12 @@ namespace TecAPI.Controllers
                         var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
                         if(primeraObligatoria.Count() > 0)
                         {
-                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha)
+                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha)
                                 .Select(s =>
                                     new {
                                         id = s.Id,
                                         titulo = s.Titulo,
-                                        fecha = s.Fecha.ToShortDateString(),
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
                                         obligatorio = s.Obligatorio,
                                         contenido = s.Contenido
                                     })
@@ -247,12 +247,12 @@ namespace TecAPI.Controllers
                         }
                         else
                         {
-                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Tipo == "G")
+                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "G")
                                 .Select(s =>
                                     new {
                                         id = s.Id,
                                         titulo = s.Titulo,
-                                        fecha = s.Fecha.ToShortDateString(),
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
                                         obligatorio = s.Obligatorio,
                                         contenido = s.Contenido
                                     })
@@ -288,7 +288,7 @@ namespace TecAPI.Controllers
             {
                 try
                 {
-                    var result = db.Sesiones.Where(w => w.DepartamentoId == int.Parse(id));
+                    var result = db.Sesiones.Include(i => i.AccionTutorial).OrderByDescending(o => o.Fecha).Where(w => w.DepartamentoId == int.Parse(id));
                     miRespuesta.code = StatusCodes.Status200OK;
                     miRespuesta.mensaje = "exito";
                     miRespuesta.data = result.ToList();

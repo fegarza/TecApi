@@ -46,19 +46,19 @@ namespace TecAPI.Models.Tutorias
         public bool? PrescripcionSistemaOseo { get; set; }
         public bool? PrescripcionSistemaOtro { get; set; }
         public bool? TratamientoPsicologicoPsiquiatrico { get; set; }
-        public bool? TratamientoPsicologicoPsiquiatricoExplicacion { get; set; }
-        public bool? ManosPiesHinchados { get; set; }
-        public bool? DoloresVientre { get; set; }
-        public bool? DoloresCabezaVomito { get; set; }
-        public bool? PerdidaEquilibrio { get; set; }
-        public bool? FatigaAgotamiento { get; set; }
-        public bool? PerdidaVistaOido { get; set; }
-        public bool? DificultadDormir { get; set; }
-        public bool? PesadillasTerroresNocturnos { get; set; }
+        public string TratamientoPsicologicoPsiquiatricoExplicacion { get; set; }
+        public byte? ManosPiesHinchados { get; set; }
+        public byte? DoloresVientre { get; set; }
+        public byte? DoloresCabezaVomito { get; set; }
+        public byte? PerdidaEquilibrio { get; set; }
+        public byte? FatigaAgotamiento { get; set; }
+        public byte? PerdidaVistaOido { get; set; }
+        public byte? DificultadDormir { get; set; }
+        public byte? PesadillasTerroresNocturnos { get; set; }
         public string PesadillasTerroresNocturnosAque { get; set; }
-        public bool? Incontinencia { get; set; }
-        public bool? Tartamudeos { get; set; }
-        public bool? MiedosIntensos { get; set; }
+        public byte? Incontinencia { get; set; }
+        public byte? Tartamudeos { get; set; }
+        public byte? MiedosIntensos { get; set; }
         public string ObservacionesHigiene { get; set; }
         public DateTime? FechaModificacion { get; set; }
 

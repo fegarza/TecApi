@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -48,6 +49,7 @@ namespace TecAPI.Controllers
                                id = s.Id,
                                usuario = new
                                {
+                                   id = s.Usuario.Id,
                                    nombreCompleto = s.Usuario.NombreCompleto,
                                    nombre = s.Usuario.Nombre,
                                    apellidoMaterno = s.Usuario.ApellidoMaterno,
@@ -414,10 +416,24 @@ namespace TecAPI.Controllers
                                     miRespuesta.data = new { acciones, errores };
                                     miRespuesta.code = StatusCodes.Status200OK;
                                 }
-                                catch
+                                catch (System.Data.DataException dex)
                                 {
-                                    miRespuesta.mensaje = "error al establecer datos al estudiante";
+                                    if (dex.InnerException is SqlException)
+                                        miRespuesta.mensaje = dex.Message;
                                     miRespuesta.code = StatusCodes.Status400BadRequest;
+
+                                }
+                                catch (SqlException sqlex)
+                                {
+                                    miRespuesta.mensaje = sqlex.Message;
+                                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.Write(e);
+                                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                                    miRespuesta.mensaje = "Error al editar personal";
+                                    // non-SQL exception handling
                                 }
                             }
                             else

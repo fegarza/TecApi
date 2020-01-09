@@ -1,7 +1,7 @@
 ﻿#define PROD
-#undef PROD
+//#undef PROD
 #define LOCAL
-#undef LOCAL
+//#undef LOCAL
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace TecAPI.Models.Tec
 #if LOCAL
         public static string host = "localhost";
         public static string dataBase = "TEC";
-        public static string userName = "sa";
+        public static string userName = "pipe";
         public static string password = "7271";
 #else
         public static string host = "192.168.1.75";

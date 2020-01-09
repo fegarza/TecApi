@@ -11,7 +11,7 @@ namespace TecAPI.Controllers
 {
 
 
-    /// <summary>
+    /// <`ummary>
     /// Todo lo relacionado con las acciones tutoriales
     /// </summary>
     [Route("api/[controller]")]
@@ -27,14 +27,14 @@ namespace TecAPI.Controllers
         /// <param name="orderBy">orden a implementar</param>
         /// <returns>un modelo de respuesta</returns>
         [HttpGet]
-        public Respuesta Index(int cant, int pag, string orderBy)
+        public Respuesta Index(int cant, int pag)
         {
             Respuesta miRespuesta = new Respuesta();
             using (TUTORIASContext db = new TUTORIASContext())
             {
                 try
                 {
-                    var result = db.AccionesTutoriales
+                    var result = db.AccionesTutoriales.OrderByDescending(o => o.Fecha)
                       .Select(s =>
                            new
                            {
@@ -42,15 +42,12 @@ namespace TecAPI.Controllers
                                personalId = s.PersonalId,
                                titulo = s.Titulo,
                                contenido = s.Contenido,
-                               fecha = s.Fecha.ToShortDateString(),
+                               fecha = s.Fecha.ToString("MM/dd/yyyy"),
                                obligatorio = s.Obligatorio,
-                               tipo = s.Tipo
+                               tipo = s.Tipo,
+                               activo = s.Activo
                            }
                     );
-                    if (!String.IsNullOrEmpty(orderBy))
-                    {
-                        result = result.OrderBy(orderBy);
-                    }
                     if (cant != 0 & pag != 0)
                     {
                         int x = ((cant * pag) - cant);

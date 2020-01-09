@@ -160,6 +160,7 @@ namespace TecAPI.Controllers
                             .Include(i => i.Grupo)
                             .Include(i => i.Grupo.Personal)
                             .Include(i => i.Usuario)
+                            .Include(i => i.EstudiantesDatos)
                             .Select(s => new
                             {
                                 id = s.Id,
@@ -187,6 +188,7 @@ namespace TecAPI.Controllers
                                         }
                                     }
                                 },
+                                estudianteDatos = s.EstudiantesDatos,
                                 numeroDeControl = s.NumeroDeControl,
                                 sesiones = s.EstudiantesSesiones.Count(),
                                 sesionesIniciales = s.SesionesIniciales,

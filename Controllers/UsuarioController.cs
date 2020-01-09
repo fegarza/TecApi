@@ -363,5 +363,114 @@ namespace TecAPI.Controllers
             }
             return respuesta;
         }
+
+
+        
+        [HttpPut]
+        [Authorize(Roles = "A, J, D, C")]
+        public Respuesta Update([FromBody] Usuarios usuario)
+        {
+            Respuesta miRespuesta = new Respuesta();
+
+            if (usuario.Id != 0)
+            {
+                  try
+                    {
+                        using (TUTORIASContext db = new TUTORIASContext())
+                        {
+
+                            var result = db.Usuarios.Where(r => r.Id == usuario.Id);
+                            if (result.Count() > 0)
+                            {
+                                try
+                                {
+                                   
+                                 
+                                   if(!String.IsNullOrEmpty(usuario.Clave))
+                                    {
+                                    result.First().Clave = usuario.Clave;
+                                    }
+                                if (!String.IsNullOrEmpty(usuario.Email))
+                                {
+                                    result.First().Email = usuario.Email;
+                                }
+
+                                    db.SaveChanges();
+                                miRespuesta.mensaje = "exito";
+                                    miRespuesta.code = StatusCodes.Status200OK;
+                                }
+                                catch
+                                {
+                                    miRespuesta.mensaje = "error al establecer datos al estudiante";
+                                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                                }
+                            }
+                            else
+                            {
+                                miRespuesta.mensaje = "no existe un estudiante con ese numero de control";
+                                miRespuesta.code = 500;
+
+                            }
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        miRespuesta.mensaje = "error en el sistema";
+                        miRespuesta.code = 500;
+                        miRespuesta.data = ex;
+                    }
+                
+            }
+            else
+            {
+                miRespuesta.code = StatusCodes.Status400BadRequest;
+                miRespuesta.mensaje = "los datos no son enviados no son correctos";
+            }
+
+            return miRespuesta;
+
+        }
+/*
+        [HttpGet]
+        [Route("{id}/Password")]
+        [AllowAnonymous]
+        public Respuesta RecuperarPassword(string id)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            MasterMailServer miMail = new MasterMailServer();
+            try
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    try
+                    {
+                        var result = db.Usuarios.Include("Estudiantes").Where(r => r.Id == int.Parse(id));
+                        if (result.Count() > 0)
+                        {
+                            List<string> mails = new List<string>();
+                            mails.Add(result.First().Email);
+                            miMail.sendMail("Recuperacion de la cuenta",$"Tu clave es: {result.First().Clave}", mails);
+                            miRespuesta.mensaje = "Enviado con exito";
+                        }
+                        else
+                        {
+                            miRespuesta.mensaje = "no existe ningun usuario con dicho id";
+                        }
+                    }
+                    catch
+                    {
+                        miRespuesta.mensaje = "id invalido";
+                    }
+
+                }
+            }
+            catch
+            {
+                miRespuesta.code = 500;
+                miRespuesta.mensaje = "Error en el sistema";
+            }
+            return miRespuesta;
+        }*/
     }
 }

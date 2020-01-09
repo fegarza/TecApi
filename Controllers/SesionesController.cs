@@ -41,7 +41,7 @@ namespace TecAPI.Controllers
                            {
                                id = s.Id,
                                departamentoId = s.DepartamentoId,
-                               fecha = s.Fecha
+                               fecha = s.Fecha.ToString("MM/dd/yyyy")
                            }
                     );
 
@@ -175,6 +175,64 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
+        [HttpDelete]
+        [Route("{id}")]
+        public Respuesta Delete(string id)
+        {
+            Respuesta respuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+                    db.Sesiones.Remove(db.Sesiones.Where(w => w.Id == int.Parse(id)).First());
+                    db.SaveChanges();
+                    respuesta.code = StatusCodes.Status200OK;
+                    respuesta.mensaje = "Sesion eliminada con exito";
+                }
+                catch (Exception e)
+                {
+                    respuesta.data = e;
+                    respuesta.code = StatusCodes.Status400BadRequest;
+                    respuesta.mensaje = "La sesion ya tiene pases de listas asignados";
+                }
+            }
+            return respuesta;
+        }
+
+
+        [HttpPut]
+        public Respuesta Update([FromBody] Sesiones sesion)
+        {
+            Respuesta respuesta = new Respuesta();
+            if (sesion.Id != 0)
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    try
+                    {
+                        var result = db.Sesiones.Where(w => w.Id == sesion.Id);
+                         result.First().Visible = sesion.Visible;
+                        db.SaveChanges();
+                        respuesta.code = StatusCodes.Status200OK;
+                        respuesta.mensaje = "Sesion editada con exito";
+                    }
+                    catch (Exception e)
+                    {
+                        respuesta.data = e;
+                        respuesta.code = StatusCodes.Status400BadRequest;
+                        respuesta.mensaje = "Error al editar la sesion";
+                    }
+                }
+            }
+            else
+            {
+                respuesta.code = StatusCodes.Status400BadRequest;
+                respuesta.mensaje = "No existe tal sesion";
+            }
+
+
+            return respuesta;
+        }
 
     }
 }

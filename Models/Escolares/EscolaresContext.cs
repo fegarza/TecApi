@@ -1,7 +1,7 @@
 ﻿#define PROD
-#undef PROD
+//#undef PROD
 #define LOCAL
-#undef LOCAL
+//#undef LOCAL
 
 using System;
 using Microsoft.EntityFrameworkCore;
@@ -43,7 +43,7 @@ namespace TecAPI.Models.Escolares
 #else
 
 #if LOCAL
-                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=sa;Password=7271;Trusted_Connection=False");
+                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=pipe;Password=7271;Trusted_Connection=True");
 #else
                 optionsBuilder.UseSqlServer("Server= 192.168.1.75; Database = ESCOLARES; User ID=pipe;Password=7271;Trusted_Connection=False");
 #endif

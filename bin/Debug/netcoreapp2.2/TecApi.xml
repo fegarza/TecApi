@@ -4,12 +4,8 @@
         <name>TecAPI</name>
     </assembly>
     <members>
-        <member name="T:TecAPI.Controllers.AccionesController">
-            <summary>
-            Todo lo relacionado con las acciones tutoriales
-            </summary>
-        </member>
-        <member name="M:TecAPI.Controllers.AccionesController.Index(System.Int32,System.Int32,System.String)">
+        <!-- Badly formed XML comment ignored for member "T:TecAPI.Controllers.AccionesController" -->
+        <member name="M:TecAPI.Controllers.AccionesController.Index(System.Int32,System.Int32)">
             <summary>
             Mostrar todas las acciones tutoriales disponibles
             </summary>
@@ -23,6 +19,31 @@
             Registra una nueva accion tutorial
             </summary>
             <param name="accion">el objeto en formato JSON</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.AccionesController.Update(TecAPI.Models.Tutorias.AccionesTutoriales)">
+            <summary>
+            Actualizar una accion tutorial
+            </summary>
+            <param name="miAccion">Objeto a actualizar</param>
+            <returns>un estado de la operacion</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.ArchivosController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todas las asesorias
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.AsesoriasController.Index(System.Int32,System.Int32,System.String,TecAPI.Models.Tutorias.Asesorias)">
+            <summary>
+            Mostrar todas las asesorias
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
             <returns>un modelo de respuesta</returns>
         </member>
         <member name="T:TecAPI.Controllers.AtencionesController">
@@ -74,6 +95,13 @@
             <param name="orderBy">orden a implementar</param>
             <returns>un modelo de respuesta</returns>
         </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.Show(System.String)">
+            <summary>
+            Mostrar un departamento en especifico
+            </summary>
+            <param name="id">id </param>
+            <returns>un departamento</returns>
+        </member>
         <member name="M:TecAPI.Controllers.DepartamentosController.IndexAcciones(System.String)">
             <summary>
             Mostrar las acciones tutoriales pertenecientes
@@ -94,6 +122,20 @@
             </summary>
             <param name="id">identificador del departamento</param>
             <returns></returns>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.IndexPersonales(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todo el personal de un departamento dado
+            </summary>
+            <param name="id">identificador del departamento</param>
+            <returns>El personal de un departamento</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.IndexAsesorias(System.String,System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todo el personal de un departamento dado
+            </summary>
+            <param name="id">identificador del departamento</param>
+            <returns>El personal de un departamento</returns>
         </member>
         <member name="T:TecAPI.Controllers.EstudiantesController">
             <summary>
@@ -123,6 +165,7 @@
             <param name="numeroDeControl">Identificador del alumno</param>
             <returns>un modelo de respuesta</returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:TecAPI.Controllers.EstudiantesController.ShowDatos(System.String)" -->
         <member name="M:TecAPI.Controllers.EstudiantesController.Update(TecAPI.Models.Tutorias.Estudiantes)">
             <summary>
             Actualizar un estudiante

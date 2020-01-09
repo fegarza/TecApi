@@ -129,7 +129,7 @@ namespace TecAPI.Controllers
                     try
                     {
                         int idx = db.Grupos.Where(w => w.Id == int.Parse(id)).First().PersonalId;
-                        var result = db.Canalizaciones.Include(i => i.Atencion).Include(i =>  i.Personal.Usuario).Include(i => i.Estudiante).Include(i => i.Estudiante.Usuario).Where(w => w.PersonalId == idx).OrderBy(o => o.Fecha);
+                        var result = db.Canalizaciones.Include(i => i.Atencion).Include(i => i.Personal.Usuario).Include(i => i.Estudiante).Include(i => i.Estudiante.Usuario).Where(w => w.PersonalId == idx).OrderBy(o => o.Fecha);
 
                         if (result.Count() > 0)
                         {
@@ -192,7 +192,8 @@ namespace TecAPI.Controllers
                                {
                                    id = s.Personal.Id,
                                    departamento = new { titulo = s.Personal.Departamento.Titulo },
-                                   usuario = new {
+                                   usuario = new
+                                   {
                                        nombreCompleto = s.Personal.Usuario.NombreCompleto
                                    }
                                },
@@ -311,21 +312,22 @@ namespace TecAPI.Controllers
                     try
                     {
                         var personal = db.Grupos.Include(i => i.Personal).Where(w => w.Id == int.Parse(id)).First().Personal;
-                        var result = db.Sesiones.OrderByDescending(o => o.Fecha).Where(w => w.DepartamentoId == personal.DepartamentoId)
-                            .Select(s => new
-                            {
-                                id = s.Id,
-                                fecha = s.Fecha.ToShortDateString(),
-                                AccionTutorial = new
-                                {
-                                    id = s.AccionTutorial.Id,
-                                    titulo = s.AccionTutorial.Titulo,
-                                    contenido = s.AccionTutorial.Contenido
-                                },
-                                Asistencias = s.EstudiantesSesiones.Select(d => new { estudianteId = d.EstudianteId })
-                            }
-                            );
 
+
+                        var result = db.Sesiones.OrderByDescending(o => o.Fecha).Where(w => w.DepartamentoId == personal.DepartamentoId && w.Visible == true)
+                        .Select(s => new
+                        {
+                            id = s.Id,
+                            fecha = s.Fecha.ToShortDateString(),
+                            AccionTutorial = new
+                            {
+                                id = s.AccionTutorial.Id,
+                                titulo = s.AccionTutorial.Titulo,
+                                contenido = s.AccionTutorial.Contenido
+                            },
+                            Asistencias = s.EstudiantesSesiones.Select(d => new { estudianteId = d.EstudianteId })
+                        }
+                        );
                         if (result.Count() > 0)
                         {
                             miRespuesta.code = StatusCodes.Status200OK;
@@ -336,6 +338,11 @@ namespace TecAPI.Controllers
                             miRespuesta.code = StatusCodes.Status404NotFound;
                             miRespuesta.mensaje = "no existe ningun grupo con dicho id";
                         }
+
+
+
+
+
                     }
                     catch (Exception ex)
                     {
@@ -501,7 +508,7 @@ namespace TecAPI.Controllers
                 miRespuesta.mensaje = "no se ha dado el id";
             }
             return miRespuesta;
-        }        
-         
+        }
+
     }
 }

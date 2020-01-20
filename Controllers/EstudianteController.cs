@@ -166,6 +166,7 @@ namespace TecAPI.Controllers
                                 id = s.Id,
                                 usuario = new
                                 {
+                                    id = s.UsuarioId,
                                     nombre = s.Usuario.Nombre,
                                     apellidoMaterno = s.Usuario.ApellidoMaterno,
                                     apellidoPaterno = s.Usuario.ApellidoPaterno,
@@ -174,6 +175,7 @@ namespace TecAPI.Controllers
                                     tipo = "E",
                                     genero = s.Usuario.Genero
                                 },
+                                carrera = s.Carrera,
                                 grupo = new
                                 {
                                     id = s.GrupoId,
@@ -418,7 +420,6 @@ namespace TecAPI.Controllers
 
         }
 
-
         /// <summary>
         /// Registrar un nuevo estudiante
         /// </summary>
@@ -653,10 +654,6 @@ namespace TecAPI.Controllers
             */
         }
 
-
-
-
-
         [Route("datos")]
         [HttpPut]
         public Respuesta Update([FromBody] EstudiantesDatos datos)
@@ -746,5 +743,21 @@ namespace TecAPI.Controllers
             return respuesta;
         }
 
+
+        [Route("count")]
+        [HttpGet]
+        public Respuesta Count()
+        {
+            Respuesta respuesta = new Respuesta();
+            respuesta.code = StatusCodes.Status200OK;
+            respuesta.mensaje = "Exito";
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                
+                respuesta.data = new {count =  db.Estudiantes.Count()};
+            }
+                
+            return respuesta;
+        }
     }
 }

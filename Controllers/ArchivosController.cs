@@ -160,5 +160,21 @@ namespace TecAPI.Controllers
             
             return respuesta;
         }
+
+        [Route("count")]
+        [HttpGet]
+        public Respuesta Count()
+        {
+            Respuesta respuesta = new Respuesta();
+            respuesta.code = StatusCodes.Status200OK;
+            respuesta.mensaje = "Exito";
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+
+                respuesta.data = new { count = db.Archivos.Count() };
+            }
+
+            return respuesta;
+        }
     }
 }

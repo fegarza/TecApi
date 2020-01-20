@@ -92,6 +92,7 @@ namespace TecAPI.Controllers
         [HttpPost]
         public Respuesta Store(Sesiones sesion)
         {
+            sesion.Visible = true;
             Respuesta miRespuesta = new Respuesta();
 
             if (!ModelState.IsValid)
@@ -124,6 +125,7 @@ namespace TecAPI.Controllers
                                 var AccionSeleccionada = db.AccionesTutoriales.Where(w => w.Id == sesion.AccionTutorialId).First();
                                 if (AccionSeleccionada.Fecha <= accionPendiente.First().Fecha)
                                 {
+                                    
                                     db.Sesiones.Add(sesion);
                                     db.SaveChanges();
                                     miRespuesta.code = StatusCodes.Status200OK;

@@ -116,6 +116,40 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
+        [HttpPut]
+        [Authorize(Roles = "A, C, J, D")]
+        public Respuesta Update([FromBody] Grupos migrupo)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            try
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    var result = db.Grupos.Where(w => w.Id == migrupo.Id);
+                    if (result.Count() > 0)
+                    {
+                        result.First().Salon = migrupo.Salon;
+                        db.SaveChanges();
+                        miRespuesta.code = StatusCodes.Status200OK;
+                        miRespuesta.mensaje = "Grupo editado con exito";
+                    }
+                    else
+                    {
+                        miRespuesta.data = migrupo;
+                        miRespuesta.code = StatusCodes.Status400BadRequest;
+                        miRespuesta.mensaje = "No existe tal grupo";
+                    }
+
+                }
+            }catch(Exception e)
+            {
+                miRespuesta.data = e;
+                miRespuesta.code = StatusCodes.Status400BadRequest;
+                miRespuesta.mensaje = "Error al intentar conectar con la base de datos de tutorias";
+            }
+            return miRespuesta;
+        }
+
 
         [Route("{id}/Canalizaciones")]
         [HttpGet]
@@ -318,7 +352,7 @@ namespace TecAPI.Controllers
                         .Select(s => new
                         {
                             id = s.Id,
-                            fecha = s.Fecha.ToShortDateString(),
+                            fecha = s.Fecha,
                             AccionTutorial = new
                             {
                                 id = s.AccionTutorial.Id,

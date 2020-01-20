@@ -66,6 +66,7 @@ namespace TecAPI.Controllers
                                tutorados = s.Grupos.Estudiantes.Count(),
                                canalizaciones = s.Canalizaciones.Count(),
                                posts = s.Posts.Count(),
+                               grupo = s.Grupos,
                                grupoId = s.Grupos.Id.ToString()
                            });
 
@@ -427,18 +428,22 @@ namespace TecAPI.Controllers
                                 {
                                     miRespuesta.mensaje = sqlex.Message;
                                     miRespuesta.code = StatusCodes.Status400BadRequest;
+
                                 }
                                 catch (Exception e)
                                 {
+                                    Console.Write("\n----------------ERROR---------------\n");
                                     Console.Write(e);
                                     miRespuesta.code = StatusCodes.Status400BadRequest;
                                     miRespuesta.mensaje = "Error al editar personal";
+                                   
+                                    miRespuesta.data = e;
                                     // non-SQL exception handling
                                 }
                             }
                             else
                             {
-                                miRespuesta.mensaje = "no existe un estudiante con ese numero de control";
+                                miRespuesta.mensaje = "no existe un personal con ese id";
                                 miRespuesta.code = 500;
 
                             }
@@ -468,5 +473,20 @@ namespace TecAPI.Controllers
 
         }
 
+        [Route("count")]
+        [HttpGet]
+        public Respuesta Count()
+        {
+            Respuesta respuesta = new Respuesta();
+            respuesta.code = StatusCodes.Status200OK;
+            respuesta.mensaje = "Exito";
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                
+                respuesta.data = new {count =  db.Personales.Count()};
+            }
+                
+            return respuesta;
+        }
     }
 }

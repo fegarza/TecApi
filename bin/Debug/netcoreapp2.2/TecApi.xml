@@ -340,7 +340,7 @@
             <param name="orderBy">orden a implementar</param>
             <returns>un modelo de respuesta</returns>
         </member>
-        <member name="M:TecAPI.Controllers.UsuariosController.Login(System.String,System.String)">
+        <member name="M:TecAPI.Controllers.UsuariosController.Login(TecAPI.Models.Tutorias.Usuarios)">
             <summary>
             Iniciar sesion
             </summary>

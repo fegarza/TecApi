@@ -306,7 +306,22 @@ namespace TecAPI.Controllers
 
             return miRespuesta;
         }
+        [Route("{id}/Sesiones/count")]
+        [Authorize(Roles = "A, C, J, D")]
+        [HttpGet]
+        public Respuesta CountSesiones(string id)
+        {
+            Respuesta respuesta = new Respuesta();
+            respuesta.code = StatusCodes.Status200OK;
+            respuesta.mensaje = "Exito";
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
 
+                respuesta.data = new { count = db.Sesiones.Where(w => w.DepartamentoId == int.Parse(id)).Count() };
+            }
+
+            return respuesta;
+        }
 
         /// <summary>
         /// Mostrar todos los grupos pertenecientes
@@ -418,7 +433,22 @@ namespace TecAPI.Controllers
 
             return miRespuesta;
         }
+        [Route("{id}/Canalizaciones/count")]
+        [Authorize(Roles = "A, C, J, D")]
+        [HttpGet]
+        public Respuesta CountCanalizaciones(string id)
+        {
+            Respuesta respuesta = new Respuesta();
+            respuesta.code = StatusCodes.Status200OK;
+            respuesta.mensaje = "Exito";
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
 
+                respuesta.data = new { count = db.Canalizaciones.Include(i => i.Personal).Where(w => w.Personal.DepartamentoId == int.Parse(id)).Count() };
+            }
+
+            return respuesta;
+        }
         /// <summary>
         /// Mostrar todo el personal de un departamento dado
         /// </summary>
@@ -503,7 +533,22 @@ namespace TecAPI.Controllers
 
         }
 
+        [Route("{id}/Personales/count")]
+        [Authorize(Roles = "A, C, J, D")]
+        [HttpGet]
+        public Respuesta CountPersonales(string id)
+        {
+            Respuesta respuesta = new Respuesta();
+            respuesta.code = StatusCodes.Status200OK;
+            respuesta.mensaje = "Exito";
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
 
+                respuesta.data = new { count = db.Personales.Where(w => w.DepartamentoId == int.Parse(id)).Count() };
+            }
+
+            return respuesta;
+        }
 
         [HttpPost]
         [Route("Asesorias")]

@@ -166,10 +166,12 @@ namespace TecAPI.Controllers
         /// <param name="clave">Clave</param>
         /// <returns>Un toekn validado</returns>
         [AllowAnonymous]
-        [HttpGet]
+        [HttpPost]
         [Route("Login")]
-        public Respuesta Login(string email, string clave)
+        public Respuesta Login([FromBody] Usuarios usr)
         {
+            string email = usr.Email;
+            string clave = usr.Clave;
             Respuesta respuesta = new Respuesta();
             try
             {
@@ -262,7 +264,7 @@ namespace TecAPI.Controllers
                     else
                     {
                         respuesta.code = StatusCodes.Status404NotFound;
-                        respuesta.mensaje = "No existe el usuario dado";
+                        respuesta.mensaje = "No existe una cuenta con esos datos";
                     }
 
 

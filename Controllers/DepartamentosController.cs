@@ -132,7 +132,7 @@ namespace TecAPI.Controllers
         /// <param name="id">identificador del departamento</param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{id}/AccionesTutoriales")]
+        [Route("{id}/AccionesTutoriales/Grupales")]
         [Authorize(Roles = "A, C, J, D")]
         public Respuesta IndexAcciones(string id)
         {
@@ -192,10 +192,16 @@ namespace TecAPI.Controllers
                         }
                         else
                         {
+                            Console.WriteLine("-------");
+                             Console.WriteLine("ENTRA AQUI");
+                             Console.WriteLine("-----");
                             // La primera obligatoria que se encuentre en orden ascendente
                             var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
                             if (primeraObligatoria.Count() > 0)
                             {
+                                Console.WriteLine("-------");
+                                Console.WriteLine("ENTRA AQUI  x2");
+                                Console.WriteLine("-----");
                                 miRespuesta.data = db.AccionesTutoriales.Where(w =>w.Activo == true && w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha && !AccionesTomadas.Contains(w.Id))
                                     .Select(s =>
                                     new {
@@ -211,7 +217,9 @@ namespace TecAPI.Controllers
                             }
                             else
                             {
-                                
+                                Console.WriteLine("-------");
+                                Console.WriteLine("ENTRA AQUI x3");
+                                Console.WriteLine("-----");
                                 miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "G" && !AccionesTomadas.Contains(w.Id)).Select(s=>
                                     new {
                                         id = s.Id,
@@ -229,7 +237,7 @@ namespace TecAPI.Controllers
                     else
                     {
                         // La primera obligatoria que se encuentre en orden ascendente
-                        var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
+                        var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true && w.Tipo == "G").OrderBy(o => o.Fecha);
                         if(primeraObligatoria.Count() > 0)
                         {
                             miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "G" && w.Fecha <= primeraObligatoria.First().Fecha)
@@ -272,9 +280,155 @@ namespace TecAPI.Controllers
                 }
 
             }
+            return miRespuesta;
+        }
+
+        /// <summary>
+        /// Mostrar las acciones tutoriales pertenecientes
+        /// </summary>
+        /// <param name="id">identificador del departamento</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{id}/AccionesTutoriales/Individuales")]
+        [Authorize(Roles = "A, C, J, D")]
+        public Respuesta IndexAccionesIndividuales(string id)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+
+                    //Acciones tutoriales tomadas
+                    var AccionesTomadas = db.SesionesIndividuales
+                        .Where(s => s.DepartamentoId == int.Parse(id))
+                        .Select(s => s.AccionTutorialId);
+
+                    if (AccionesTomadas.Count() > 0)
+                    {
+                        //La ultima obligatoria que ha tenido 
+                        var obligatorias = db.SesionesIndividuales
+                            .Where(s => s.DepartamentoId == int.Parse(id) && s.AccionTutorial.Obligatorio == true)
+                            .OrderBy(o => o.AccionTutorial.Fecha);
+                        if (obligatorias.Count() > 0)
+                        {
+                            // La primera obligatoria que se encuentre en orden ascendente y sea despues a la ultima obligatoria que ya tiene (aquella que no se haya tomado)
+                            var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Tipo == "I" && w.Obligatorio == true && w.Fecha > obligatorias.Last().AccionTutorial.Fecha).OrderBy(o => o.Fecha);
+                            if (primeraObligatoria.Count() > 0)
+                            {
+                                miRespuesta.data = db.AccionesTutoriales
+                                    .Where(w => w.Activo == true && w.Tipo == "I" && w.Fecha <= primeraObligatoria.First().Fecha && !AccionesTomadas.Contains(w.Id))
+                                    .Select(s =>
+                                    new {
+                                        id = s.Id,
+                                        titulo = s.Titulo,
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
+                                        obligatorio = s.Obligatorio,
+                                        contenido = s.Contenido
+                                    })
+                                    .ToList();
+                                miRespuesta.code = StatusCodes.Status200OK;
+                                miRespuesta.mensaje = "exito";
+                            }
+                            else
+                            {
+                                miRespuesta.data = db.AccionesTutoriales
+                                    .Where(w => w.Activo == true && w.Tipo == "I" && !AccionesTomadas.Contains(w.Id) && w.Fecha > obligatorias.Last().Fecha)
+                                    .Select(s =>
+                                    new {
+                                        id = s.Id,
+                                        titulo = s.Titulo,
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
+                                        obligatorio = s.Obligatorio,
+                                        contenido = s.Contenido
+                                    })
+                                    .ToList();
+                                miRespuesta.code = StatusCodes.Status200OK;
+                                miRespuesta.mensaje = "exito";
+                            }
+                        }
+                        else
+                        {
+                            // La primera obligatoria que se encuentre en orden ascendente
+                            var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
+                            if (primeraObligatoria.Count() > 0)
+                            {
+                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "I" && w.Fecha <= primeraObligatoria.First().Fecha && !AccionesTomadas.Contains(w.Id))
+                                    .Select(s =>
+                                    new {
+                                        id = s.Id,
+                                        titulo = s.Titulo,
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
+                                        obligatorio = s.Obligatorio,
+                                        contenido = s.Contenido
+                                    })
+                                    .ToList();
+                                miRespuesta.code = StatusCodes.Status200OK;
+                                miRespuesta.mensaje = "exito";
+                            }
+                            else
+                            {
+
+                                miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "I" && !AccionesTomadas.Contains(w.Id)).Select(s =>
+                                    new {
+                                        id = s.Id,
+                                        titulo = s.Titulo,
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
+                                        obligatorio = s.Obligatorio,
+                                        contenido = s.Contenido
+                                    })
+                                    .ToList();
+                                miRespuesta.code = StatusCodes.Status200OK;
+                                miRespuesta.mensaje = "exito";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // La primera obligatoria que se encuentre en orden ascendente
+                        var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true && w.Tipo == "I").OrderBy(o => o.Fecha);
+                        if (primeraObligatoria.Count() > 0)
+                        {
+                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "I" && w.Fecha <= primeraObligatoria.First().Fecha)
+                                .Select(s =>
+                                    new {
+                                        id = s.Id,
+                                        titulo = s.Titulo,
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
+                                        obligatorio = s.Obligatorio,
+                                        contenido = s.Contenido
+                                    })
+                                .ToList();
+                            miRespuesta.code = StatusCodes.Status200OK;
+                            miRespuesta.mensaje = "exito";
+                        }
+                        else
+                        {
+                            miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "I")
+                                .Select(s =>
+                                    new {
+                                        id = s.Id,
+                                        titulo = s.Titulo,
+                                        fecha = s.Fecha.ToString("MM/dd/yyyy"),
+                                        obligatorio = s.Obligatorio,
+                                        contenido = s.Contenido
+                                    })
+                                .ToList();
+                            miRespuesta.code = StatusCodes.Status200OK;
+                            miRespuesta.mensaje = "exito";
+                        }
 
 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    miRespuesta.code = StatusCodes.Status500InternalServerError;
+                    miRespuesta.mensaje = "error interno";
+                    miRespuesta.data = ex;
+                }
 
+            }
             return miRespuesta;
         }
 
@@ -306,6 +460,8 @@ namespace TecAPI.Controllers
 
             return miRespuesta;
         }
+
+
         [Route("{id}/Sesiones/count")]
         [Authorize(Roles = "A, C, J, D")]
         [HttpGet]
@@ -322,6 +478,57 @@ namespace TecAPI.Controllers
 
             return respuesta;
         }
+
+
+        [HttpGet]
+        [Route("{id}/SesionesIndividuales")]
+        [Authorize(Roles = "A, C, J, D")]
+        public Respuesta IndexSesionesIndividuales(string id)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+                try
+                {
+                    var result = db.SesionesIndividuales.Include(i => i.AccionTutorial).OrderByDescending(o => o.Fecha).Where(w => w.DepartamentoId == int.Parse(id));
+                    miRespuesta.code = StatusCodes.Status200OK;
+                    miRespuesta.mensaje = "exito";
+                    miRespuesta.data = result.ToList();
+                }
+                catch (Exception ex)
+                {
+                    miRespuesta.code = StatusCodes.Status500InternalServerError;
+                    miRespuesta.mensaje = "error interno";
+                    miRespuesta.data = ex;
+                }
+
+            }
+
+
+
+            return miRespuesta;
+        }
+
+
+        [Route("{id}/SesionesIndividuales/count")]
+        [Authorize(Roles = "A, C, J, D")]
+        [HttpGet]
+        public Respuesta CountSesionesIndividuales(string id)
+        {
+            Respuesta respuesta = new Respuesta();
+            respuesta.code = StatusCodes.Status200OK;
+            respuesta.mensaje = "Exito";
+            using (TUTORIASContext db = new TUTORIASContext())
+            {
+
+                respuesta.data = new { count = db.SesionesIndividuales.Where(w => w.DepartamentoId == int.Parse(id)).Count() };
+            }
+
+            return respuesta;
+        }
+
+
+
 
         /// <summary>
         /// Mostrar todos los grupos pertenecientes

@@ -13181,11 +13181,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\TecAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Felipe\\Documents\\2. Projects\\TECAPI\\TecApi\\TecAPI.csproj",
       "projectName": "TecAPI",
-      "projectPath": "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\TecAPI.csproj",
+      "projectPath": "C:\\Users\\Felipe\\Documents\\2. Projects\\TECAPI\\TecApi\\TecAPI.csproj",
       "packagesPath": "C:\\Users\\Felipe\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Felipe\\Documents\\projects\\TECAPI\\TecApi\\obj\\",
+      "outputPath": "C:\\Users\\Felipe\\Documents\\2. Projects\\TECAPI\\TecApi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

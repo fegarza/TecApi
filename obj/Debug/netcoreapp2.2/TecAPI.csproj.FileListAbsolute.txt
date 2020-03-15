@@ -28,3 +28,17 @@ C:\Users\Felipe\Documents\projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.
 C:\Users\Felipe\Documents\projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.dll
 C:\Users\Felipe\Documents\projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.pdb
 C:\Users\Felipe\Documents\projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.csproj.CoreCompileInputs.cache
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\bin\Debug\netcoreapp2.2\TecAPI.deps.json
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\bin\Debug\netcoreapp2.2\TecAPI.runtimeconfig.json
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\bin\Debug\netcoreapp2.2\TecAPI.runtimeconfig.dev.json
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\bin\Debug\netcoreapp2.2\TecAPI.dll
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\bin\Debug\netcoreapp2.2\TecAPI.pdb
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.csprojAssemblyReference.cache
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.csproj.CoreCompileInputs.cache
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.RazorAssemblyInfo.cache
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.RazorAssemblyInfo.cs
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.AssemblyInfoInputs.cache
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.AssemblyInfo.cs
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.RazorTargetAssemblyInfo.cache
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.dll
+C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.pdb

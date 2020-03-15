@@ -1,5 +1,5 @@
 ﻿#define PROD
-//#undef PROD
+#undef PROD
 #define LOCAL
 //#undef LOCAL
 

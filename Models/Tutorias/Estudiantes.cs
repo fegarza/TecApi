@@ -9,7 +9,7 @@ namespace TecAPI.Models.Tutorias
         {
             Canalizaciones = new HashSet<Canalizaciones>();
             EstudiantesSesiones = new HashSet<EstudiantesSesiones>();
-            SesionesIndividuales = new HashSet<SesionesIndividuales>();
+            EstudiantesSesionesIndividuales = new HashSet<EstudiantesSesionesIndividuales>();
         }
 
         public int Id { get; set; }
@@ -28,6 +28,6 @@ namespace TecAPI.Models.Tutorias
         public virtual EstudiantesDatos EstudiantesDatos { get; set; }
         public virtual ICollection<Canalizaciones> Canalizaciones { get; set; }
         public virtual ICollection<EstudiantesSesiones> EstudiantesSesiones { get; set; }
-        public virtual ICollection<SesionesIndividuales> SesionesIndividuales { get; set; }
+        public virtual ICollection<EstudiantesSesionesIndividuales> EstudiantesSesionesIndividuales { get; set; }
     }
 }

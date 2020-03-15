@@ -228,7 +228,8 @@ namespace TecAPI.Controllers
                             {
                                 new Claim(ClaimTypes.Role, "E"),
                                 new Claim("rol",  "E"),
-                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                                 new Claim("nocontrol", busqueda.First().Estudiantes.NumeroDeControl)
                             };
                             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("wW7pPV7ngghwWxpNLc7N8SQPhjXcPQEMtHwpfiknpJqkr5aX1kSDsNnndqWLXWkx"));
                             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

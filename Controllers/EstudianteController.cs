@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -194,7 +195,6 @@ namespace TecAPI.Controllers
                                 numeroDeControl = s.NumeroDeControl,
                                 sesiones = s.EstudiantesSesiones.Count(),
                                 sesionesIniciales = s.SesionesIniciales,
-                                SesionesIndividuales = s.SesionesIndividuales.Count(),
                                 canalizaciones = s.Canalizaciones.Count(),
                                 cantidadDeCreditos = creditos.Count(),
                                 creditos = creditos,
@@ -319,10 +319,10 @@ namespace TecAPI.Controllers
         /// <param name="miEstudiante">Objeto del estudiante en formato JSON</param>
         /// <returns>un modelo de respuesta</returns>
         [HttpPut]
-        [Authorize(Roles = "A, C, J, D")]
-        public Respuesta Update([FromBody] Estudiantes miEstudiante)
+        [Authorize(Roles = "A, C, J, D, E")]
+        public Respuesta Update([FromBody] Estudiantes miEstudiante, [FromQuery]string token)
         {
-            Respuesta miRespuesta = new Respuesta();
+             Respuesta miRespuesta = new Respuesta();
             if (miEstudiante != null)
             {
                 if (!String.IsNullOrEmpty(miEstudiante.NumeroDeControl))
@@ -332,12 +332,11 @@ namespace TecAPI.Controllers
                         using (TUTORIASContext db = new TUTORIASContext())
                         {
 
-                            var result = db.Estudiantes.Where(r => r.NumeroDeControl == miEstudiante.NumeroDeControl);
+                            var result = db.Estudiantes.Include(i=> i.Usuario).Where(r => r.NumeroDeControl == miEstudiante.NumeroDeControl);
                             if (result.Count() > 0)
                             {
                                 try
                                 {
-
                                     List<string> acciones = new List<string>();
                                     List<string> errores = new List<string>();
                                     if (miEstudiante.GrupoId != null)
@@ -350,7 +349,63 @@ namespace TecAPI.Controllers
                                         }
                                         else
                                         {
-                                            errores.Add("no existe ningun grupo con el id dado");
+                                            result.First().GrupoId = null;
+                                            acciones.Add("se ha desasignado el grupo con exito");
+                                        }
+                                    }
+                                    if (miEstudiante.Usuario.Clave != null)
+                                    {
+                                        
+                                         
+                                        JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+                                        JwtSecurityToken tokenS = handler.ReadToken(token) as JwtSecurityToken;
+                                        string x = tokenS.Claims.First(claim => claim.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role").Value;
+                                        if (x == "E")
+                                        {
+                                            
+                                            
+                                            string a = tokenS.Claims.First(claim => claim.Type == "nocontrol").Value;
+                                            if (a == miEstudiante.NumeroDeControl)
+                                            {
+                                                
+                                                //miRespuesta.code = 200;
+                                                //miRespuesta.mensaje = "se ha encontrado el rol";
+                                                //miRespuesta.data = x;
+
+                                                if (db.Usuarios.Where(r => r.Id == miEstudiante.Usuario.Id).Count() > 0)
+                                                {
+                                                    result.First().Usuario.Clave = miEstudiante.Usuario.Clave;
+                                                    acciones.Add("se ha modificado la clave con éxito");
+                                                  
+                                                }
+                                                else
+                                                {
+                                                    errores.Add("no existe un usuario con el id dado");
+                                                    miRespuesta.mensaje = "error al establecer datos al estudiante";
+                                                    miRespuesta.code = StatusCodes.Status400BadRequest;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                errores.Add("acceso restringido");
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            if (db.Usuarios.Where(r => r.Id == miEstudiante.Usuario.Id).Count() > 0)
+                                            {
+                                                Console.WriteLine("-----------------------------------");
+                                                Console.WriteLine("-----------------------------------");
+                                                Console.WriteLine("-----------------------------------");
+                                                Console.WriteLine("-----------------------------------");
+                                                result.First().Usuario.Clave = miEstudiante.Usuario.Clave;
+                                                acciones.Add("se ha modificado la clave con éxito");
+                                            }
+                                            else
+                                            {
+                                                errores.Add("no existe un usuario con el id dado");
+                                            }
                                         }
                                     }
                                     if (miEstudiante.CarreraId != 0)
@@ -376,15 +431,21 @@ namespace TecAPI.Controllers
                                         result.First().FotoLink = miEstudiante.FotoLink;
                                         acciones.Add("se ha cambiado la foto de perfil con exito");
                                     }
+                                    if (!String.IsNullOrEmpty(miEstudiante.Estado))
+                                    {
+                                        result.First().Estado = miEstudiante.Estado;
+                                        acciones.Add("se ha cambiado el estado del alumno");
+                                    }
                                     db.SaveChanges();
                                     miRespuesta.mensaje = "exito";
                                     miRespuesta.data = new { acciones, errores };
                                     miRespuesta.code = StatusCodes.Status200OK;
                                 }
-                                catch
+                                catch(Exception ex)
                                 {
                                     miRespuesta.mensaje = "error al establecer datos al estudiante";
                                     miRespuesta.code = StatusCodes.Status400BadRequest;
+                                    miRespuesta.data = ex;
                                 }
                             }
                             else

@@ -109,6 +109,13 @@
             <param name="id">identificador del departamento</param>
             <returns></returns>
         </member>
+        <member name="M:TecAPI.Controllers.DepartamentosController.IndexAccionesIndividuales(System.String)">
+            <summary>
+            Mostrar las acciones tutoriales pertenecientes
+            </summary>
+            <param name="id">identificador del departamento</param>
+            <returns></returns>
+        </member>
         <member name="M:TecAPI.Controllers.DepartamentosController.Indexgrupos(System.String)">
             <summary>
             Mostrar todos los grupos pertenecientes
@@ -166,7 +173,7 @@
             <returns>un modelo de respuesta</returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:TecAPI.Controllers.EstudiantesController.ShowDatos(System.String)" -->
-        <member name="M:TecAPI.Controllers.EstudiantesController.Update(TecAPI.Models.Tutorias.Estudiantes)">
+        <member name="M:TecAPI.Controllers.EstudiantesController.Update(TecAPI.Models.Tutorias.Estudiantes,System.String)">
             <summary>
             Actualizar un estudiante
             </summary>
@@ -224,6 +231,30 @@
             <returns>Modelo de respuesta</returns>
         </member>
         <member name="M:TecAPI.Controllers.GruposController.StoreSesion(System.String,System.String,System.Collections.Generic.List{TecAPI.Models.Tutorias.Estudiantes})">
+            <summary>
+            Insertar la lista de asistencias en una sesion
+            </summary>
+            <param name="id">id del grupo</param>
+            <param name="sesionId">id de la sesion</param>
+            <param name="estudiantes">arreglo de estudiantes</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.ShowSesionesIndividuales(System.String)">
+            <summary>
+            Mostrar las sesiones de un grupo en especifico
+            </summary>
+            <param name="id">Identificador del grupo</param>
+            <returns>Modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.ShowAsistenciasIndividuales(System.String,System.String)">
+            <summary>
+            Mostrar una sesion en especifico de un grupo en especifico
+            </summary>
+            <param name="id">Identificador del grupo</param>
+            <param name="sesionId">Identificador de la sesion</param>
+            <returns>Modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.GruposController.StoreSesionIndividual(System.String,System.String,System.Collections.Generic.List{TecAPI.Models.Tutorias.Estudiantes})">
             <summary>
             Insertar la lista de asistencias en una sesion
             </summary>
@@ -295,6 +326,22 @@
             <returns>un modelo de respuesta</returns>
         </member>
         <member name="M:TecAPI.Controllers.SesionesController.Store(TecAPI.Models.Tutorias.Sesiones)">
+            <summary>
+            Insertar una sesion
+            </summary>
+            <param name="sesion">El objeto sesion en formato JSON</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.SesionesIndividualesController.Index(System.Int32,System.Int32,System.String)">
+            <summary>
+            Mostrar todas las sesiones
+            </summary>
+            <param name="cant">cantidad de registros a traer</param>
+            <param name="pag">pagina en la que se quiere estar</param>
+            <param name="orderBy">orden a implementar</param>
+            <returns>un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.SesionesIndividualesController.Store(TecAPI.Models.Tutorias.SesionesIndividuales)">
             <summary>
             Insertar una sesion
             </summary>

@@ -13,9 +13,9 @@ namespace TecAPI.Models.Tutorias
     {
         sealed class MetaData
         {
-            [DataType(DataType.Date, ErrorMessage = "la fecha no es valida")]
+            [DataType(DataType.DateTime, ErrorMessage = "la fecha no es valida")]
             [Required(ErrorMessage = "la fecha no ha sido introducida")]
-            public DateTime Fecha { get; set; }
+            public DateTime? Fecha { get; set; }
             [Existe("departamento", ErrorMessage = "el departamento no existe en el sistema")]
             [Required(ErrorMessage = "el DepartamentoId no ha sido introducido")]
             public byte DepartamentoId { get; set; }

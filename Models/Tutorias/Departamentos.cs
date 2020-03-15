@@ -10,6 +10,7 @@ namespace TecAPI.Models.Tutorias
             DepartamentosAsesorias = new HashSet<DepartamentosAsesorias>();
             Personales = new HashSet<Personales>();
             Sesiones = new HashSet<Sesiones>();
+            SesionesIndividuales = new HashSet<SesionesIndividuales>();
         }
 
         public byte Id { get; set; }
@@ -21,5 +22,6 @@ namespace TecAPI.Models.Tutorias
         public virtual ICollection<DepartamentosAsesorias> DepartamentosAsesorias { get; set; }
         public virtual ICollection<Personales> Personales { get; set; }
         public virtual ICollection<Sesiones> Sesiones { get; set; }
+        public virtual ICollection<SesionesIndividuales> SesionesIndividuales { get; set; }
     }
 }

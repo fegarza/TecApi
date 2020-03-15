@@ -9,16 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using TecAPI.Models.Request;
 using TecAPI.Models.Tutorias;
 
+
 namespace TecAPI.Controllers
 {
-    /// <summary>
-    /// Todo lo relacionado a las sesiones
-    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "A, C, J, D, T")]
 
-    public class SesionesController : ControllerBase
+    public class SesionesIndividualesController : ControllerBase
     {
         /// <summary>
         /// Mostrar todas las sesiones
@@ -35,7 +33,7 @@ namespace TecAPI.Controllers
             {
                 try
                 {
-                    var result = db.Sesiones
+                    var result = db.SesionesIndividuales
                       .Select(s =>
                            new
                            {
@@ -90,12 +88,9 @@ namespace TecAPI.Controllers
         /// <param name="sesion">El objeto sesion en formato JSON</param>
         /// <returns>Un modelo de respuesta</returns>
         [HttpPost]
-        public Respuesta Store(Sesiones sesion)
+        public Respuesta Store(SesionesIndividuales sesion)
         {
-            Console.WriteLine(DateTime.Now.ToString());
-            Console.WriteLine(DateTime.Now.ToString());
-            Console.WriteLine(DateTime.Now.ToString());
-            Console.WriteLine(DateTime.Now.ToString());
+
 
             sesion.Visible = true;
             Respuesta miRespuesta = new Respuesta();
@@ -119,8 +114,8 @@ namespace TecAPI.Controllers
                     using (TUTORIASContext db = new TUTORIASContext())
                     {
 
-                        var sesionesDelDepartamento = db.Sesiones.Include(i => i.AccionTutorial).Where(s => s.DepartamentoId == sesion.DepartamentoId).Select(s => s.AccionTutorialId).ToArray();
-                        var accionesTutorialesSinTomar = db.AccionesTutoriales.Where(w => !sesionesDelDepartamento.Contains(w.Id) && w.Tipo == "G");
+                        var sesionesDelDepartamento = db.SesionesIndividuales.Include(i => i.AccionTutorial).Where(s => s.DepartamentoId == sesion.DepartamentoId).Select(s => s.AccionTutorialId).ToArray();
+                        var accionesTutorialesSinTomar = db.AccionesTutoriales.Where(w => !sesionesDelDepartamento.Contains(w.Id) && w.Tipo == "I");
                         if (accionesTutorialesSinTomar.Count() > 0)
                         {
                             var accionPendiente = accionesTutorialesSinTomar.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
@@ -130,8 +125,8 @@ namespace TecAPI.Controllers
                                 var AccionSeleccionada = db.AccionesTutoriales.Where(w => w.Id == sesion.AccionTutorialId).First();
                                 if (AccionSeleccionada.Fecha <= accionPendiente.First().Fecha)
                                 {
-                                    
-                                    db.Sesiones.Add(sesion);
+
+                                    db.SesionesIndividuales.Add(sesion);
                                     db.SaveChanges();
                                     miRespuesta.code = StatusCodes.Status200OK;
                                     miRespuesta.mensaje = "exito";
@@ -146,7 +141,7 @@ namespace TecAPI.Controllers
                             }
                             else
                             {
-                                db.Sesiones.Add(sesion);
+                                db.SesionesIndividuales.Add(sesion);
                                 db.SaveChanges();
                                 miRespuesta.code = StatusCodes.Status200OK;
                                 miRespuesta.mensaje = "exito";
@@ -191,7 +186,7 @@ namespace TecAPI.Controllers
             {
                 try
                 {
-                    db.Sesiones.Remove(db.Sesiones.Where(w => w.Id == int.Parse(id)).First());
+                    db.SesionesIndividuales.Remove(db.SesionesIndividuales.Where(w => w.Id == int.Parse(id)).First());
                     db.SaveChanges();
                     respuesta.code = StatusCodes.Status200OK;
                     respuesta.mensaje = "Sesion eliminada con exito";
@@ -208,7 +203,7 @@ namespace TecAPI.Controllers
 
 
         [HttpPut]
-        public Respuesta Update([FromBody] Sesiones sesion)
+        public Respuesta Update([FromBody] SesionesIndividuales sesion)
         {
             Respuesta respuesta = new Respuesta();
             if (sesion.Id != 0)
@@ -217,8 +212,8 @@ namespace TecAPI.Controllers
                 {
                     try
                     {
-                        var result = db.Sesiones.Where(w => w.Id == sesion.Id);
-                         result.First().Visible = sesion.Visible;
+                        var result = db.SesionesIndividuales.Where(w => w.Id == sesion.Id);
+                        result.First().Visible = sesion.Visible;
                         db.SaveChanges();
                         respuesta.code = StatusCodes.Status200OK;
                         respuesta.mensaje = "Sesion editada con exito";
@@ -240,6 +235,7 @@ namespace TecAPI.Controllers
 
             return respuesta;
         }
+
 
     }
 }

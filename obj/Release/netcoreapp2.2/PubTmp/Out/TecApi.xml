@@ -173,6 +173,13 @@
             <returns>un modelo de respuesta</returns>
         </member>
         <!-- Badly formed XML comment ignored for member "M:TecAPI.Controllers.EstudiantesController.ShowDatos(System.String)" -->
+        <member name="M:TecAPI.Controllers.EstudiantesController.ShowSesionesEspeciales(System.String)">
+            <summary>
+            Mostrar por un estudiante dado
+            </summary>
+            <param name="id">Id del estudiante</param>
+            <returns>Sesion especial</returns>
+        </member>
         <member name="M:TecAPI.Controllers.EstudiantesController.Update(TecAPI.Models.Tutorias.Estudiantes,System.String)">
             <summary>
             Actualizar un estudiante
@@ -311,6 +318,33 @@
             <param name="personal">El objeto del personal en formato JSON</param>
             <returns>Un modelo de respuesta</returns>
         </member>
+        <member name="M:TecAPI.Controllers.ReporteController.GetSemestralPorGrupo(System.String,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="periodo"></param>
+            <param name="year"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TecAPI.Controllers.ReporteController.GetSemestralPorDepartamento(System.String,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="periodo"></param>
+            <param name="year"></param>
+            <returns></returns>
+        </member>
+        <member name="M:TecAPI.Controllers.ReporteController.GetSemestralPorInstitucion(System.String,System.Int32,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="periodo"></param>
+            <param name="year"></param>
+            <returns></returns>
+        </member>
         <member name="T:TecAPI.Controllers.SesionesController">
             <summary>
             Todo lo relacionado a las sesiones
@@ -330,6 +364,13 @@
             Insertar una sesion
             </summary>
             <param name="sesion">El objeto sesion en formato JSON</param>
+            <returns>Un modelo de respuesta</returns>
+        </member>
+        <member name="M:TecAPI.Controllers.SesionesEspecialesController.Store(TecAPI.Models.Tutorias.SesionesEspeciales)">
+            <summary>
+            Insertar una sesionEspecial
+            </summary>
+            <param name="sesionEspecial">El objeto sesion en formato JSON</param>
             <returns>Un modelo de respuesta</returns>
         </member>
         <member name="M:TecAPI.Controllers.SesionesIndividualesController.Index(System.Int32,System.Int32,System.String)">

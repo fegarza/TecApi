@@ -1,6 +1,6 @@
 ﻿#define PROD
-#undef PROD
-#define LOCAL
+//#undef PROD
+//#define LOCAL
 //#undef LOCAL
 
 using System;

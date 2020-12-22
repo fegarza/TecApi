@@ -92,10 +92,6 @@ namespace TecAPI.Controllers
         [HttpPost]
         public Respuesta Store(Sesiones sesion)
         {
-            Console.WriteLine(DateTime.Now.ToString());
-            Console.WriteLine(DateTime.Now.ToString());
-            Console.WriteLine(DateTime.Now.ToString());
-            Console.WriteLine(DateTime.Now.ToString());
 
             sesion.Visible = true;
             Respuesta miRespuesta = new Respuesta();

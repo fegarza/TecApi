@@ -38,11 +38,11 @@ namespace TecAPI
             });
             var filePath = Path.Combine(PlatformServices.Default.Application.ApplicationBasePath, "TecAPI.xml");
             Console.WriteLine(filePath.ToString());
-           /*
+           
             services.AddSwaggerGen(c =>
             {
                   c.IncludeXmlComments(filePath);
-            });*/
+            });
            
 
             services.AddCors();

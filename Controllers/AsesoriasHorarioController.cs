@@ -14,6 +14,7 @@ namespace TecAPI.Controllers
     [ApiController]
     public class AsesoriasHorarioController : ControllerBase
     {
+        [HttpGet]
         public Respuesta Index(int cant, int pag, string orderBy)
         {
             Respuesta miRespuesta = new Respuesta();

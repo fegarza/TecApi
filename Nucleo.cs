@@ -34,7 +34,7 @@ namespace TecAPI
             smtp.Port = 2525;
             smtp.EnableSsl = false;
             smtp.UseDefaultCredentials = false;
-            smtp.Credentials = new NetworkCredential("fegarza@outlook.es", "Fischer17100218");
+            smtp.Credentials = new NetworkCredential("fegarza@outlook.es", "ok");
             try
             {
                 smtp.Send(email);

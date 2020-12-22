@@ -33,6 +33,7 @@ namespace TecAPI.Models.Tutorias
         public virtual DbSet<Personales> Personales { get; set; }
         public virtual DbSet<Posts> Posts { get; set; }
         public virtual DbSet<Sesiones> Sesiones { get; set; }
+        public virtual DbSet<SesionesEspeciales> SesionesEspeciales { get; set; }
         public virtual DbSet<SesionesIndividuales> SesionesIndividuales { get; set; }
         public virtual DbSet<Titulos> Titulos { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
@@ -42,8 +43,9 @@ namespace TecAPI.Models.Tutorias
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-              //  optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
-               optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; Trusted_Connection=True");
+                //optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; Trusted_Connection=True");
+                //optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; Trusted_Connection=True");
+                optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
             }
         }
 
@@ -729,6 +731,35 @@ namespace TecAPI.Models.Tutorias
                     .HasForeignKey(d => d.DepartamentoId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Sesion_Departamento");
+            });
+
+            modelBuilder.Entity<SesionesEspeciales>(entity =>
+            {
+                entity.HasIndex(e => new { e.Fecha, e.EstudianteId })
+                    .HasName("UQ_SesionesEspeciales")
+                    .IsUnique();
+
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Comentarios).HasColumnType("text");
+
+                entity.Property(e => e.EstudianteId).HasColumnName("EstudianteID");
+
+                entity.Property(e => e.Fecha).HasColumnType("datetime");
+
+                entity.Property(e => e.PersonalId).HasColumnName("PersonalID");
+
+                entity.HasOne(d => d.Estudiante)
+                    .WithMany(p => p.SesionesEspeciales)
+                    .HasForeignKey(d => d.EstudianteId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionesEspeciales_Estudiantes");
+
+                entity.HasOne(d => d.Personal)
+                    .WithMany(p => p.SesionesEspeciales)
+                    .HasForeignKey(d => d.PersonalId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SesionesEspeciales_Personales");
             });
 
             modelBuilder.Entity<SesionesIndividuales>(entity =>

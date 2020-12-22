@@ -10,6 +10,7 @@ namespace TecAPI.Models.Tutorias
             AccionesTutoriales = new HashSet<AccionesTutoriales>();
             Canalizaciones = new HashSet<Canalizaciones>();
             Posts = new HashSet<Posts>();
+            SesionesEspeciales = new HashSet<SesionesEspeciales>();
         }
 
         public int Id { get; set; }
@@ -26,5 +27,6 @@ namespace TecAPI.Models.Tutorias
         public virtual ICollection<AccionesTutoriales> AccionesTutoriales { get; set; }
         public virtual ICollection<Canalizaciones> Canalizaciones { get; set; }
         public virtual ICollection<Posts> Posts { get; set; }
+        public virtual ICollection<SesionesEspeciales> SesionesEspeciales { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿#define PROD
-#undef PROD
-#define LOCAL
+//#undef PROD
+//#define LOCAL
 //#undef LOCAL
 
 using System;
@@ -299,6 +299,23 @@ namespace TecAPI.Models.Tec
             connection.Close();
 
             return PersonalLista;
+        }
+
+
+
+        public static string TraerNombreDelSubdirector()
+        {
+            string name = "";
+            SqlConnection connection = new SqlConnection($"Data Source={host};Initial Catalog={dataBase};User ID={userName};Password={password}");
+            connection.Open();
+            SqlCommand command = new SqlCommand($"SELECT TOP 1 (TRIM(dperso.persig)+TRIM(dperso.perape) + TRIM(dperso.pernom)) AS nombre FROM dperso INNER JOIN dpuest ON dperso.percve = dpuest.percve WHERE puenom LIKE '%subdirector%'", connection);
+            SqlDataReader dr = command.ExecuteReader();
+            while (dr.Read())
+            {
+                name = dr["nombre"].ToString();
+            }
+            connection.Close();
+            return name;
         }
     }
 }

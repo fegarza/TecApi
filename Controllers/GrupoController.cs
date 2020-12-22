@@ -245,6 +245,8 @@ namespace TecAPI.Controllers
                                                   },
                                                   numeroDeControl = v.NumeroDeControl,
                                                   sesiones = v.EstudiantesSesiones.Count(),
+                                                  sesionesIndividuales = v.EstudiantesSesionesIndividuales.Count(),
+                                                  sesionesEspeciales = v.SesionesEspeciales.Count(),
                                                   sesionesIniciales = v.SesionesIniciales,
                                                   canalizaciones = v.Canalizaciones.Count(),
                                                   cantidadDeCreditos = EstudiantesController.IndexCreditos(v.NumeroDeControl),
@@ -284,6 +286,11 @@ namespace TecAPI.Controllers
 
             return miRespuesta;
         }
+
+
+
+
+       
 
         /// <summary>
         /// Insertar un grupo
@@ -544,14 +551,6 @@ namespace TecAPI.Controllers
             }
             return miRespuesta;
         }
-
-
-
-
-
-
-
-
 
 
         /// <summary>

@@ -78,6 +78,11 @@ namespace TecAPI.Controllers
             return miRespuesta;
         }
 
+
+    
+         
+      
+
         /// <summary>
         /// Mostrar un departamento en especifico
         /// </summary>

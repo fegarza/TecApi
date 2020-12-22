@@ -7,7 +7,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <EncryptedPassword />
-    <_PublishTargetUrl>D:\Actualziaciones\Api</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\Users\Felipe\Desktop\Actualizacion 6-13-2020\API</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="appsettings.Development.json">

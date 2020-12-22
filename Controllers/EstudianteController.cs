@@ -195,6 +195,8 @@ namespace TecAPI.Controllers
                                 numeroDeControl = s.NumeroDeControl,
                                 sesiones = s.EstudiantesSesiones.Count(),
                                 sesionesIniciales = s.SesionesIniciales,
+                                sesionesIndividuales = s.EstudiantesSesionesIndividuales.Count(),
+                                sesionesEspeciales = s.SesionesEspeciales.Count(),
                                 canalizaciones = s.Canalizaciones.Count(),
                                 cantidadDeCreditos = creditos.Count(),
                                 creditos = creditos,
@@ -312,6 +314,73 @@ namespace TecAPI.Controllers
             return miRespuesta;
 
         }
+
+
+
+        /// <summary>
+        /// Mostrar por un estudiante dado
+        /// </summary>
+        /// <param name="id">Id del estudiante</param>
+        /// <returns>Sesion especial</returns>
+        [Route("{numeroDeControl}/SesionesEspeciales")]
+        [Authorize(Roles = "A, C, J, D, T, E")]
+        [HttpGet]
+        public Respuesta ShowSesionesEspeciales(string numeroDeControl)
+        {
+            Respuesta miRespuesta = new Respuesta();
+            if (numeroDeControl != null)
+            {
+                using (TUTORIASContext db = new TUTORIASContext())
+                {
+                    try
+                    {
+                        var result = db.SesionesEspeciales
+                            .Where(w => w.Estudiante.NumeroDeControl == numeroDeControl)
+                            .Select(s => new {
+                                id = s.Id,
+                                fecha = s.Fecha,
+                                estudiante = new { id = s.EstudianteId },
+                                personal = new { 
+                                    usuario = new {nombreCompleto =  s.Personal.Usuario.NombreCompleto },
+                                    id = s.PersonalId 
+                                },
+                                comentarios = s.Comentarios
+                            });
+
+
+                        if (result.Count() > 0)
+                        {
+                            miRespuesta.code = StatusCodes.Status200OK;
+                            miRespuesta.data = result.ToList();
+                        }
+                        else
+                        {
+                            miRespuesta.code = StatusCodes.Status404NotFound;
+                            miRespuesta.mensaje = "no existe ninguna sesion especial con ese estudiante";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        miRespuesta.code = StatusCodes.Status500InternalServerError;
+                        miRespuesta.mensaje = "error interno";
+                    }
+
+                }
+            }
+            else
+            {
+                miRespuesta.code = StatusCodes.Status409Conflict;
+                miRespuesta.mensaje = "no se ha dado el numero de control";
+            }
+
+
+
+            return miRespuesta;
+        }
+
+
+
+
 
         /// <summary>
         /// Actualizar un estudiante

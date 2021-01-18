@@ -1,6 +1,5 @@
-﻿#define PROD
-//#undef PROD
-//#define LOCAL
+﻿
+#define LOCAL
 //#undef LOCAL
 
 using System;
@@ -37,17 +36,14 @@ namespace TecAPI.Models.Escolares
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-#if PROD
-                 optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = Escolares; User ID=Complementarias;Password=Proyecto.2kl8;Trusted_Connection=False");
-#else
+ 
 
 #if LOCAL
-                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=pipe;Password=7271;Trusted_Connection=True");
+                optionsBuilder.UseSqlServer("Server= pipesv; Database = ESCOLARES; User ID=sa;Password=Tesla7271;Trusted_Connection=False");
 #else
-                optionsBuilder.UseSqlServer("Server= 192.168.1.75; Database = ESCOLARES; User ID=pipe;Password=7271;Trusted_Connection=False");
-#endif
-#endif
+                 optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = Escolares; User ID=Complementarias;Password=Proyecto.2kl8;Trusted_Connection=False");
+#endif 
+
             }
         }
 

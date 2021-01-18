@@ -38,6 +38,9 @@ namespace TecAPI.Controllers
         public Respuesta Get()
         {
             Respuesta miRespuesta = new Respuesta();
+
+            miRespuesta.mensaje = "Version 2021-01-07";
+
             List<object> errores = new List<object>();
             try
             {
@@ -62,6 +65,9 @@ namespace TecAPI.Controllers
                 errores.Add(ex);
             }
             errores.Add(TECDB.ComprobarConexion());
+            
+            
+            
             miRespuesta.data = errores;
             return miRespuesta;
         }

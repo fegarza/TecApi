@@ -1,6 +1,4 @@
-﻿#define PROD
-//#undef PROD
-//#define LOCAL
+﻿#define LOCAL
 //#undef LOCAL
 
 using System;
@@ -15,27 +13,21 @@ namespace TecAPI.Models.Tec
 {
     public static class TECDB
     {
-#if PROD
+#if LOCAL
+        public static string host = "pipesv";
+        public static string dataBase = "TEC";
+        public static string userName = "sa";
+        public static string password = "Tesla7271";
+#else
         public static string host = "10.10.10.10";
         public static string dataBase = "TEC";
         public static string userName = "tutorias";
         public static string password = "Tut0r14s.2014";
 
-#else
-#if LOCAL
-        public static string host = "localhost";
-        public static string dataBase = "TEC";
-        public static string userName = "pipe";
-        public static string password = "7271";
-#else
-        public static string host = "192.168.1.75";
-        public static string dataBase = "TEC";
-        public static string userName = "pipe";
-        public static string password = "7271";
 #endif
 
 
-#endif
+
         public static bool ExisteNumeroDeControl(string _numeroDeControl)
         {
             bool resp = false;
@@ -73,7 +65,7 @@ namespace TecAPI.Models.Tec
 
                 while (dr.Read())
                 {
-                    
+
                 }
                 connection.Close();
             }

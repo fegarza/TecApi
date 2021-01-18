@@ -37,15 +37,14 @@ namespace TecAPI.Models.Tutorias
         public virtual DbSet<SesionesIndividuales> SesionesIndividuales { get; set; }
         public virtual DbSet<Titulos> Titulos { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
+        public virtual DbSet<ReporteDepartamento> ReportesDepartamento { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                //optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; Trusted_Connection=True");
-                //optionsBuilder.UseSqlServer("Server= localhost; Database = TUTORIAS; Trusted_Connection=True");
-                optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
+                 optionsBuilder.UseSqlServer("Server = pipesv; Database = TUTORIAS; User ID=sa;Password=Tesla7271;Trusted_Connection=False");
+                //optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
             }
         }
 

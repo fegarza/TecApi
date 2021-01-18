@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -137,11 +138,12 @@ namespace TecAPI.Controllers
         /// <returns></returns>
         [Route("{id}/Departamento")]
         [HttpGet]
-        [Authorize(Roles = "A, C, J, D")]
-        public Respuesta GetSemestralPorDepartamento(string id, int periodo, int year)
+        [AllowAnonymous]
+        //[Authorize(Roles = "A, C, J, D")]
+        public Respuesta GetSemestralPorDepartamento(string id, string fechaInicial, string fechaFinal)
         {
 
-            DateTime fechaInicial;
+          /*  DateTime fechaInicial;
             DateTime fechaFinal;
             if (periodo == 1)
             {
@@ -153,14 +155,22 @@ namespace TecAPI.Controllers
                 fechaInicial = new DateTime(year, 8, 1);
                 fechaFinal = new DateTime(year, 12, 29);
             }
-
+          */
             //.Where(w => w.Fecha >= fechaInicial && w.Fecha <= fechaFinal)
             Respuesta miRespuesta = new Respuesta();
             try
             {
                 using (TUTORIASContext db = new TUTORIASContext())
                 {
-                    var result = db.Departamentos
+                    List<object> parametros = new List<object>();
+
+
+                    var parFechaInicial = new SqlParameter("parFechaInicial", fechaInicial);
+                    var parFechaFinal = new SqlParameter("parFechaFinal",  fechaFinal);
+                    var parDepartamento = new SqlParameter("parDepartamentoID", id);
+
+                    var tutoresReporte = db.Set<ReporteDepartamento>().FromSql($"SPReportePorDepartamento @parFechaInicial, @parFechaFinal, @parDepartamentoID", parFechaInicial, parFechaFinal, parDepartamento).ToList();
+                     var result = db.Departamentos
                          .Select(s => new
                          {
                              id = s.Id,
@@ -168,7 +178,7 @@ namespace TecAPI.Controllers
                              jefeTutor = s.Personales.Where(w => w.Cargo == "J").Select(c => c.Usuario.NombreCompleto).FirstOrDefault(),
                              jefeDepartamento = s.Personales.Where(w => w.Cargo == "D").Select(c => c.Usuario.NombreCompleto).FirstOrDefault(),
 
-                             tutores = s.Personales.Select(r => new
+                             tutores = tutoresReporte/* s.Personales.Select(r => new
                              {
                                  id = r.Usuario.Id,
                                  usuario = new
@@ -184,7 +194,7 @@ namespace TecAPI.Controllers
                                  estudiantesH = r.Grupos.Estudiantes.Where(w => w.Estado != "B" && w.Estado != "E" && w.Usuario.Genero == "H" && w.Semestre > 2).Count(),
                                  estudiantesM = r.Grupos.Estudiantes.Where(w => w.Estado != "B" && w.Estado != "E" && w.Usuario.Genero == "M" && w.Semestre > 2).Count(),
                                  canalizacionesLista = r.Canalizaciones.GroupBy(g => g.Atencion.Titulo).Select(v => new { count = v.Count(), area = v.Key } )
-                             }).Where(w => w.Cargo != "A")
+                             }).Where(w => w.Cargo != "A")*/
                          }).Where(w => w.id == int.Parse(id));
 
                     if (result.Count() > 0)

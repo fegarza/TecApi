@@ -1,14 +1,19 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "36ada1c1e8b662219ed1a975a4366b53a637cd4f"
+    "signature": ""
   },
   "compilationOptions": {
     "defines": [
       "TRACE",
       "RELEASE",
       "NETCOREAPP",
-      "NETCOREAPP2_2"
+      "NETCOREAPP2_2",
+      "NETCOREAPP1_0_OR_GREATER",
+      "NETCOREAPP1_1_OR_GREATER",
+      "NETCOREAPP2_0_OR_GREATER",
+      "NETCOREAPP2_1_OR_GREATER",
+      "NETCOREAPP2_2_OR_GREATER"
     ],
     "languageVersion": "7.3",
     "platform": "x64",
@@ -26,7 +31,9 @@
         "dependencies": {
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.Cors": "2.2.0",
+          "Microsoft.AspNetCore.Razor.Design": "2.2.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.2.6",
+          "Microsoft.EntityFrameworkCore.Tools": "2.2.6",
           "Microsoft.Extensions.Logging.Console": "2.2.0",
           "Microsoft.Extensions.PlatformAbstractions": "1.1.0",
           "Microsoft.NETCore.App": "2.2.0",
@@ -153,6 +160,11 @@
         },
         "compile": {
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.SqlServer.dll": {}
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Tools/2.2.6": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Design": "2.2.6"
         }
       },
       "Microsoft.Extensions.PlatformAbstractions/1.1.0": {
@@ -780,6 +792,7 @@
           "Microsoft.AspNetCore.NodeServices": "2.2.0",
           "Microsoft.AspNetCore.Owin": "2.2.0",
           "Microsoft.AspNetCore.Razor": "2.2.0",
+          "Microsoft.AspNetCore.Razor.Design": "2.2.0",
           "Microsoft.AspNetCore.Razor.Language": "2.2.0",
           "Microsoft.AspNetCore.Razor.Runtime": "2.2.0",
           "Microsoft.AspNetCore.ResponseCaching": "2.2.0",
@@ -814,6 +827,7 @@
           "Microsoft.EntityFrameworkCore.InMemory": "2.2.0",
           "Microsoft.EntityFrameworkCore.Relational": "2.2.6",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.2.6",
+          "Microsoft.EntityFrameworkCore.Tools": "2.2.6",
           "Microsoft.Extensions.Caching.Abstractions": "2.2.0",
           "Microsoft.Extensions.Caching.Memory": "2.2.0",
           "Microsoft.Extensions.Caching.SqlServer": "2.2.0",
@@ -1384,6 +1398,7 @@
           "Microsoft.AspNetCore.Mvc.RazorPages": "2.2.0",
           "Microsoft.AspNetCore.Mvc.TagHelpers": "2.2.0",
           "Microsoft.AspNetCore.Mvc.ViewFeatures": "2.2.0",
+          "Microsoft.AspNetCore.Razor.Design": "2.2.0",
           "Microsoft.Extensions.Caching.Memory": "2.2.0",
           "Microsoft.Extensions.DependencyInjection": "2.2.0"
         },
@@ -1587,6 +1602,9 @@
         "compile": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Razor.dll": {}
         },
+        "compileOnly": true
+      },
+      "Microsoft.AspNetCore.Razor.Design/2.2.0": {
         "compileOnly": true
       },
       "Microsoft.AspNetCore.Razor.Language/2.2.0": {
@@ -3764,6 +3782,13 @@
       "path": "microsoft.entityframeworkcore.sqlserver/2.2.6",
       "hashPath": "microsoft.entityframeworkcore.sqlserver.2.2.6.nupkg.sha512"
     },
+    "Microsoft.EntityFrameworkCore.Tools/2.2.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-L6vi+eT++Q+2jSIWtOB1LD4yB4dR1nQrWg/Wx1kArPo0rD8D9R4uD6LU5OFz3U/ibjADxLgmQmYDqjusrOI7SA==",
+      "path": "microsoft.entityframeworkcore.tools/2.2.6",
+      "hashPath": "microsoft.entityframeworkcore.tools.2.2.6.nupkg.sha512"
+    },
     "Microsoft.Extensions.PlatformAbstractions/1.1.0": {
       "type": "package",
       "serviceable": true,
@@ -4477,6 +4502,13 @@
       "sha512": "sha512-V54PIyDCFl8COnTp9gezNHpUNHk7F9UnerGeZy3UfbnwYvfzbo+ipqQmSgeoESH8e0JvKhRTyQyZquW2EPtCmg==",
       "path": "microsoft.aspnetcore.razor/2.2.0",
       "hashPath": "microsoft.aspnetcore.razor.2.2.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Razor.Design/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VLWK+ZtMMNukY6XjxYHc7mz33vkquoEzQJHm/LCF5REVxIaexLr+UTImljRRJBdUDJluDAQwU+59IX0rFDfURA==",
+      "path": "microsoft.aspnetcore.razor.design/2.2.0",
+      "hashPath": "microsoft.aspnetcore.razor.design.2.2.0.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Razor.Language/2.2.0": {
       "type": "package",

@@ -327,7 +327,7 @@
             <param name="year"></param>
             <returns></returns>
         </member>
-        <member name="M:TecAPI.Controllers.ReporteController.GetSemestralPorDepartamento(System.String,System.Int32,System.Int32)">
+        <member name="M:TecAPI.Controllers.ReporteController.GetSemestralPorDepartamento(System.String,System.String,System.String)">
             <summary>
             
             </summary>

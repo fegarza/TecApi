@@ -1,6 +1,6 @@
 ﻿
-#define LOCAL
-//#undef LOCAL
+//#define LOCAL
+#undef LOCAL
 
 using System;
 using Microsoft.EntityFrameworkCore;

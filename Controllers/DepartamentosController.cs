@@ -355,7 +355,7 @@ namespace TecAPI.Controllers
                         else
                         {
                             // La primera obligatoria que se encuentre en orden ascendente
-                            var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true).OrderBy(o => o.Fecha);
+                            var primeraObligatoria = db.AccionesTutoriales.Where(w => w.Obligatorio == true && w.Tipo == "I").OrderBy(o => o.Fecha);
                             if (primeraObligatoria.Count() > 0)
                             {
                                 miRespuesta.data = db.AccionesTutoriales.Where(w => w.Activo == true && w.Tipo == "I" && w.Fecha <= primeraObligatoria.First().Fecha && !AccionesTomadas.Contains(w.Id))

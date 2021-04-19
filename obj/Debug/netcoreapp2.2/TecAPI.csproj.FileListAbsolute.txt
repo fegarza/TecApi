@@ -44,7 +44,6 @@ C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecA
 C:\Users\Felipe\Documents\2. Projects\TECAPI\TecApi\obj\Debug\netcoreapp2.2\TecAPI.csproj.CoreCompileInputs.cache
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\bin\Debug\netcoreapp2.2\appsettings.Development.json
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\bin\Debug\netcoreapp2.2\appsettings.json
-C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\bin\Debug\netcoreapp2.2\Properties\launchSettings.json
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.deps.json
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.runtimeconfig.json
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\bin\Debug\netcoreapp2.2\TecAPI.runtimeconfig.dev.json

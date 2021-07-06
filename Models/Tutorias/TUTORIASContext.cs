@@ -43,8 +43,8 @@ namespace TecAPI.Models.Tutorias
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder.UseSqlServer("Server = pipesv; Database = TUTORIAS; User ID=sa;Password=Tesla7271;Trusted_Connection=False");
-                optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
+               //optionsBuilder.UseSqlServer("Server = localhost; Database = TUTORIAS; User ID=lana;Password=123;Trusted_Connection=False");
+               optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = TUTORIAS; User ID=tutorias;Password=Tutorias.2019;Trusted_Connection=False");
             }
         }
 

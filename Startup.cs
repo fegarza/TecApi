@@ -79,6 +79,8 @@ namespace TecAPI
 
             app.UseCors(
                options =>  options.WithOrigins( new string[]{
+                "https://tutorias.nlaredo.tecnm.mx",
+                "http://tutorias.nlaredo.tecnm.mx",
                 "http://localhost:4200",
                 "http://tecapi.ddns.net",
                 "http://localhost"

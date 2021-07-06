@@ -71,3 +71,22 @@ C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\obj\Release\netcoreapp2.2\TecAPI
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\obj\Release\netcoreapp2.2\TecAPI.dll
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\obj\Release\netcoreapp2.2\TecAPI.pdb
 C:\Users\Felipe Garza\Documents\Proyecto\TecAPI\obj\Release\netcoreapp2.2\TecAPI.genruntimeconfig.cache
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\appsettings.Development.json
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\appsettings.json
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\Properties\launchSettings.json
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\TecAPI.deps.json
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\TecAPI.runtimeconfig.json
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\TecAPI.runtimeconfig.dev.json
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\TecAPI.dll
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\TecAPI.pdb
+C:\Users\alanc\Source\Repos\TecAPClone\bin\Debug\netcoreapp2.2\netcoreapp2.2\TecApi.xml
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.csprojAssemblyReference.cache
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.AssemblyInfoInputs.cache
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.AssemblyInfo.cs
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.csproj.CoreCompileInputs.cache
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.RazorAssemblyInfo.cache
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.RazorAssemblyInfo.cs
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.RazorTargetAssemblyInfo.cache
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.dll
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.pdb
+C:\Users\alanc\Source\Repos\TecAPClone\obj\Release\netcoreapp2.2\TecAPI.genruntimeconfig.cache

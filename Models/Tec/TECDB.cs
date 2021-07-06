@@ -14,10 +14,10 @@ namespace TecAPI.Models.Tec
     public static class TECDB
     {
 #if LOCAL
-        public static string host = "pipesv";
-        public static string dataBase = "TEC";
-        public static string userName = "sa";
-        public static string password = "Tesla7271";
+        public static string host = "localhost";
+        public static string dataBase = "Tec";
+        public static string userName = "lana";
+        public static string password = "123";
 #else
         public static string host = "10.10.10.10";
         public static string dataBase = "TEC";

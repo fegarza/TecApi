@@ -36,12 +36,12 @@ namespace TecAPI.Models.Escolares
         {
             if (!optionsBuilder.IsConfigured)
             {
- 
+
 
 #if LOCAL
-                optionsBuilder.UseSqlServer("Server= pipesv; Database = ESCOLARES; User ID=sa;Password=Tesla7271;Trusted_Connection=False");
+                optionsBuilder.UseSqlServer("Server= localhost; Database = ESCOLARES; User ID=lana;Password=123;Trusted_Connection=False");
 #else
-                 optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = Escolares; User ID=Complementarias;Password=Proyecto.2kl8;Trusted_Connection=False");
+                optionsBuilder.UseSqlServer("Server= 10.10.10.51; Database = Escolares; User ID=Complementarias;Password=Proyecto.2kl8;Trusted_Connection=False");
 #endif 
 
             }

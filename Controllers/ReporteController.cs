@@ -80,7 +80,7 @@ namespace TecAPI.Controllers
                                                       genero = v.Usuario.Genero
                                                   },
                                                   numeroDeControl = v.NumeroDeControl,
-                                                  sesiones = v.EstudiantesSesiones.Where(w => w.Sesion.Fecha >= fechaInicial && w.Sesion.Fecha <= fechaFinal).Count(),
+                                                  sesiones =  v.EstudiantesSesiones.Where(w => w.Sesion.Fecha >= fechaInicial && w.Sesion.Fecha <= fechaFinal).Count(),
                                                   sesionesIndividuales = v.EstudiantesSesionesIndividuales.Where(w => w.SesionIndividual.Fecha >= fechaInicial && w.SesionIndividual.Fecha <= fechaFinal).Count(),
                                                   sesionesEspeciales = v.SesionesEspeciales.Where(w => w.Fecha >= fechaInicial && w.Fecha <= fechaFinal).Count(),
                                                   sesionesIniciales = v.SesionesIniciales,
@@ -91,7 +91,7 @@ namespace TecAPI.Controllers
                                                   }).Distinct(),
                                                   semestre = v.Semestre,
                                                   estado = v.Estado
-                                              }).ToList(),
+                                              }).Where(w=> w.estado != "B" && w.estado != "E").ToList(),
                                estudiantesH1 = s.Estudiantes.Where(w => w.Estado != "B" && w.Estado != "E" && w.Usuario.Genero == "H" && (w.Semestre == 1 || w.Semestre == 2)).Count(),
                                estudiantesM1 = s.Estudiantes.Where(w => w.Estado != "B" && w.Estado != "E" && w.Usuario.Genero == "M" && (w.Semestre == 1 || w.Semestre == 2)).Count(),
                                estudiantesH = s.Estudiantes.Where(w => w.Estado != "B" && w.Estado != "E" && w.Usuario.Genero == "H" && w.Semestre > 2).Count(),
@@ -288,11 +288,6 @@ namespace TecAPI.Controllers
 
 
                          });
-
-
-
-
-                    
 
 
                     if (dep.Count() > 0)

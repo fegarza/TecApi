@@ -1,23 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Felipe Garza\\Documents\\Proyecto\\TecAPI\\TecAPI.csproj": {}
+    "C:\\Users\\alanc\\Source\\Repos\\TecAPClone\\TecAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Felipe Garza\\Documents\\Proyecto\\TecAPI\\TecAPI.csproj": {
+    "C:\\Users\\alanc\\Source\\Repos\\TecAPClone\\TecAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Felipe Garza\\Documents\\Proyecto\\TecAPI\\TecAPI.csproj",
+        "projectUniqueName": "C:\\Users\\alanc\\Source\\Repos\\TecAPClone\\TecAPI.csproj",
         "projectName": "TecAPI",
-        "projectPath": "C:\\Users\\Felipe Garza\\Documents\\Proyecto\\TecAPI\\TecAPI.csproj",
-        "packagesPath": "C:\\Users\\Felipe Garza\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Felipe Garza\\Documents\\Proyecto\\TecAPI\\obj\\",
+        "projectPath": "C:\\Users\\alanc\\Source\\Repos\\TecAPClone\\TecAPI.csproj",
+        "packagesPath": "C:\\Users\\alanc\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\alanc\\Source\\Repos\\TecAPClone\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Felipe Garza\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\alanc\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -29,7 +26,6 @@
         },
         "frameworks": {
           "netcoreapp2.2": {
-            "targetAlias": "netcoreapp2.2",
             "projectReferences": {}
           }
         },
@@ -41,7 +37,6 @@
       },
       "frameworks": {
         "netcoreapp2.2": {
-          "targetAlias": "netcoreapp2.2",
           "dependencies": {
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",
@@ -105,7 +100,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
